@@ -21,15 +21,15 @@ direnv allow
 Then build a resume PDF:
 
 ```sh
-./build_pdf.py cv.md
+./cv/build_pdf.py cv/cv.md
 ```
 
-The output will be `cv.pdf`.
+The output will be `cv/cv.pdf`.
 
 ## Usage
 
 ```sh
-./build_pdf.py <input.md>
+./cv/build_pdf.py <input.md>
 ```
 
 Generates `<input>.pdf` with a two-page polished layout.

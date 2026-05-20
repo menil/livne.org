@@ -2,8 +2,10 @@
 
 ## Project structure
 
-- `build_pdf.py` — Main script: reads Markdown, generates a two-page PDF resume via WeasyPrint.
-- `cv.md` — Sample resume in Markdown.
+- `cv/` — Resume source files:
+  - `build_pdf.py` — Main script: reads Markdown, generates a two-page PDF resume via WeasyPrint.
+  - `build_docx.py` — Script to generate a styled DOCX from Markdown.
+  - `cv.md` — Resume in Markdown.
 - `devenv.{nix,yaml}` — Nix-based dev environment declaring system libs (pango, glib, cairo) and Python deps.
 - `.envrc` — direnv auto-activation for devenv.
 

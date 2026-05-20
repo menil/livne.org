@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'cv.md'
-      - 'build_pdf.py'
-      - 'build_docx.py'
+      - 'cv/cv.md'
+      - 'cv/build_pdf.py'
+      - 'cv/build_docx.py'
       - 'devenv.nix'
       - 'devenv.yaml'
       - 'devenv.lock'
@@ -33,7 +33,7 @@ jobs:
         run: nix profile install nixpkgs#devenv
 
       - name: Generate PDF and DOCX
-        run: devenv shell bash -e -c './build_pdf.py cv.md && ./build_docx.py cv.md'
+        run: devenv shell bash -e -c './cv/build_pdf.py cv/cv.md && ./cv/build_docx.py cv/cv.md'
 
       - uses: softprops/action-gh-release@v2
         with:
@@ -41,6 +41,7 @@ jobs:
           name: Resume build ${{ github.run_number }}
           body: Auto-built from commit ${{ github.sha }}
           files: |
-            cv.pdf
-            cv.docx
+            cv/cv.md
+            cv/cv.pdf
+            cv/cv.docx
           target_commitish: ${{ github.sha }}
