@@ -11,17 +11,7 @@
     liberation_ttf
   ];
 
-  env.FONTCONFIG_FILE = pkgs.writeText "fonts.conf" ''
-    <?xml version="1.0"?>
-    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-    <fontconfig>
-      <include ignore_missing="yes">${pkgs.fontconfig.out}/etc/fonts/fonts.conf</include>
-      <dir>/System/Library/Fonts</dir>
-      <dir>/Library/Fonts</dir>
-      <dir>~/.fonts</dir>
-      <dir>~/.local/share/fonts</dir>
-    </fontconfig>
-  '';
+  env.FONTCONFIG_FILE = "${pkgs.fontconfig.out}/etc/fonts/fonts.conf";
 
   languages.python = {
     enable = true;

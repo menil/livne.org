@@ -86,7 +86,7 @@ def build_flawless_pdf(md_file):
             background-color: #fafbfd; 
         }}
         body {{
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Liberation Sans', sans-serif;
             color: #333333;
             line-height: 1.5; 
             margin: 0;
