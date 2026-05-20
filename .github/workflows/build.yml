@@ -1,0 +1,46 @@
+name: Build PDF and DOCX
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cv.md'
+      - 'build_pdf.py'
+      - 'build_docx.py'
+      - 'devenv.nix'
+      - 'devenv.yaml'
+      - 'devenv.lock'
+      - '.github/workflows/build.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: cachix/cachix-action@v14
+        with:
+          name: devenv
+
+      - name: Install devenv
+        run: nix profile install nixpkgs#devenv
+
+      - name: Generate PDF and DOCX
+        run: devenv shell bash -e -c './build_pdf.py cv.md && ./build_docx.py cv.md'
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_id }}
+          name: Resume build ${{ github.run_number }}
+          body: Auto-built from commit ${{ github.sha }}
+          files: |
+            cv.pdf
+            cv.docx
+          target_commitish: ${{ github.sha }}
