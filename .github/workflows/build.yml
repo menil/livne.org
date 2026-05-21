@@ -88,10 +88,14 @@ jobs:
         working-directory: ./cv
         run: devenv shell bash -e -c './build_pdf.py cv.md && ./build_docx.py cv.md'
 
+      - name: Generate date tag
+        id: date
+        run: echo "short=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT" && echo "long=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
       - uses: softprops/action-gh-release@v3
         with:
-          tag_name: build-${{ github.run_id }}
-          name: Resume build ${{ github.run_number }}
+          tag_name: cv-${{ steps.date.outputs.short }}-${{ github.run_number }}
+          name: CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}
           body: Auto-built from commit ${{ github.sha }}
           files: |
             cv/cv.md
