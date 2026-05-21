@@ -25,7 +25,7 @@ jobs:
       - uses: cachix/cachix-action@v17
         with:
           name: devenv
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             cv/.devenv
@@ -71,7 +71,7 @@ jobs:
         with:
           name: devenv
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             cv/.devenv
