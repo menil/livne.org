@@ -14,6 +14,10 @@
 
   env.FONTCONFIG_FILE = "${pkgs.fontconfig.out}/etc/fonts/fonts.conf";
 
+  enterShell = ''
+    git config core.hooksPath .githooks 2>/dev/null || true
+  '';
+
   languages.python = {
     enable = true;
     package = pkgs.python3.withPackages (ps: with ps; [
