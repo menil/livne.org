@@ -143,8 +143,8 @@ def build_styled_docx(input_file: str) -> None:
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     normal.paragraph_format.line_spacing = 1.25
 
-    cfg_name = config.get("name", "[REDACTED] [REDACTED]")
-    cfg_email = config.get("email", "[REDACTED_EMAIL]")
+    cfg_name = config["name"]
+    cfg_email = config["email"]
 
     found_name = False
     for paragraph in doc.paragraphs:

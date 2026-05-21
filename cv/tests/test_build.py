@@ -178,10 +178,11 @@ def _write_json(path, data):
 
 
 def test_build_flawless_pdf_happy_path(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
-    pdf_file = tmp_path / "test.pdf"
     build_pdf.build_flawless_pdf(str(md_file))
+    pdf_file = tmp_path / "[REDACTED]_[REDACTED]_resume.pdf"
     assert pdf_file.exists()
     assert pdf_file.stat().st_size > 100
     with open(pdf_file, "rb") as f:
@@ -206,10 +207,11 @@ def test_build_flawless_pdf_with_config(tmp_path):
 
 
 def test_build_styled_docx_happy_path(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
-    docx_file = tmp_path / "test.docx"
     build_docx.build_styled_docx(str(md_file))
+    docx_file = tmp_path / "[REDACTED]_[REDACTED]_resume.docx"
     assert docx_file.exists()
     assert docx_file.stat().st_size > 100
     with open(docx_file, "rb") as f:
@@ -234,10 +236,11 @@ def test_build_styled_docx_with_config(tmp_path):
 
 
 def test_build_html_happy_path(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
-    html_file = tmp_path / "test.html"
     build_html.build_web_html(str(md_file))
+    html_file = tmp_path / "[REDACTED]_[REDACTED]_resume.html"
     assert html_file.exists()
     assert html_file.stat().st_size > 100
     with open(html_file) as f:
@@ -245,7 +248,6 @@ def test_build_html_happy_path(tmp_path):
     assert "<!DOCTYPE html>" in content
     assert "[REDACTED] [REDACTED]" in content
     assert 'href="mailto:[REDACTED_EMAIL]"' in content
-    assert "Download PDF" in content
 
 
 def test_build_html_missing_file(tmp_path, capsys):

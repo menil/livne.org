@@ -114,7 +114,7 @@ def build_web_html(md_file: str) -> None:
     with open(tpl_path, encoding="utf-8") as f:
         tpl_content = f.read()
 
-    config_name = config.get("name", "[REDACTED] [REDACTED]")
+    config_name = config["name"]
     slug = config_name.lower().replace(" ", "_")
     pdf_url = f"{slug}_resume.pdf"
     linkedin_url = config.get("linkedin", "")

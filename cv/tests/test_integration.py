@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -32,8 +33,15 @@ def _check_file(path: str, magic: bytes, label: str) -> None:
     assert header == magic, f"{label} wrong magic bytes: {header!r}"
 
 
+def _write_config(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f)
+
+
 def test_build_pdf():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
+        cfg_path = os.path.join(tmp, "config.json")
+        _write_config(cfg_path, {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
         md_path = os.path.join(tmp, "test.md")
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
@@ -46,11 +54,13 @@ def test_build_pdf():
             cwd=script_dir,
         )
         assert result.returncode == 0, f"build_pdf.py failed: {result.stderr}"
-        _check_file(os.path.join(tmp, "test.pdf"), b"%PDF", "PDF")
+        _check_file(os.path.join(tmp, "[REDACTED]_[REDACTED]_resume.pdf"), b"%PDF", "PDF")
 
 
 def test_build_docx():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
+        cfg_path = os.path.join(tmp, "config.json")
+        _write_config(cfg_path, {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
         md_path = os.path.join(tmp, "test.md")
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
@@ -63,11 +73,13 @@ def test_build_docx():
             cwd=script_dir,
         )
         assert result.returncode == 0, f"build_docx.py failed: {result.stderr}"
-        _check_file(os.path.join(tmp, "test.docx"), b"PK", "DOCX")
+        _check_file(os.path.join(tmp, "[REDACTED]_[REDACTED]_resume.docx"), b"PK", "DOCX")
 
 
 def test_build_html():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
+        cfg_path = os.path.join(tmp, "config.json")
+        _write_config(cfg_path, {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
         md_path = os.path.join(tmp, "test.md")
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
@@ -80,7 +92,7 @@ def test_build_html():
             cwd=script_dir,
         )
         assert result.returncode == 0, f"build_html.py failed: {result.stderr}"
-        html_path = os.path.join(tmp, "test.html")
+        html_path = os.path.join(tmp, "[REDACTED]_[REDACTED]_resume.html")
         assert os.path.exists(html_path), "HTML output not found"
         size = os.path.getsize(html_path)
         assert size > 100, f"HTML output too small ({size} bytes)"
