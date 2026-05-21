@@ -37,12 +37,15 @@ def _add_run(paragraph, text):
 # ─── _format_name_header ──────────────────────────────────────
 
 
+_NAME = "[REDACTED] [REDACTED]"
+
+
 def test_name_header_title_style():
     doc = Document()
     p = doc.add_paragraph("[REDACTED] [REDACTED]")
     p.style = doc.styles["Title"]
     _add_run(p, "[REDACTED] [REDACTED]")
-    assert build_docx._format_name_header(p)
+    assert build_docx._format_name_header(p, _NAME)
 
 
 def test_name_header_heading1_style():
@@ -50,7 +53,7 @@ def test_name_header_heading1_style():
     p = doc.add_paragraph("[REDACTED] [REDACTED] - CEO")
     p.style = doc.styles["Heading 1"]
     _add_run(p, "[REDACTED] [REDACTED] - CEO")
-    assert build_docx._format_name_header(p)
+    assert build_docx._format_name_header(p, _NAME)
 
 
 def test_name_header_no_name():
@@ -58,7 +61,7 @@ def test_name_header_no_name():
     p = doc.add_paragraph("Not My Name")
     p.style = doc.styles["Title"]
     _add_run(p, "Not My Name")
-    assert not build_docx._format_name_header(p)
+    assert not build_docx._format_name_header(p, _NAME)
 
 
 def test_name_header_wrong_style_and_long():
@@ -66,14 +69,14 @@ def test_name_header_wrong_style_and_long():
     p = doc.add_paragraph("[REDACTED] [REDACTED] - Chief Executive Officer")
     p.style = doc.styles["Heading 2"]
     _add_run(p, "[REDACTED] [REDACTED] - Chief Executive Officer")
-    assert not build_docx._format_name_header(p)
+    assert not build_docx._format_name_header(p, _NAME)
 
 
 def test_name_header_wrong_style_but_short():
     doc = Document()
     p = doc.add_paragraph("[REDACTED] [REDACTED]")
     p.style = doc.styles["Normal"]
-    assert build_docx._format_name_header(p)
+    assert build_docx._format_name_header(p, _NAME)
 
 
 def test_name_header_formats_correctly():
@@ -81,7 +84,7 @@ def test_name_header_formats_correctly():
     p = doc.add_paragraph("[REDACTED] [REDACTED]")
     p.style = doc.styles["Title"]
     _add_run(p, "[REDACTED] [REDACTED]")
-    assert build_docx._format_name_header(p)
+    assert build_docx._format_name_header(p, _NAME)
     assert p.alignment == WD_ALIGN_PARAGRAPH.CENTER
     assert p.runs[0].font.size == Pt(26)
     assert p.runs[0].font.bold

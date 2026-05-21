@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 import re
 import sys
@@ -7,6 +8,28 @@ import markdown
 import weasyprint
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+_DEFAULTS: dict[str, str] = {
+    "name": "[REDACTED] [REDACTED]",
+    "email": "[REDACTED_EMAIL]",
+    "phone": "[REDACTED_PHONE]",
+}
+
+
+def load_config(md_file: str) -> dict[str, str]:
+    config_path = os.path.join(os.path.dirname(md_file), "config.json")
+    if os.path.exists(config_path):
+        with open(config_path, encoding="utf-8") as f:
+            return json.load(f)  # type: ignore[no-any-return]
+    return {}
+
+
+def apply_config(md_content: str, config: dict[str, str]) -> str:
+    merged = {**_DEFAULTS, **config}
+    for key in ("name", "email", "phone"):
+        md_content = md_content.replace("{{ " + key + " }}", merged[key])
+    return md_content
 
 
 def fix_markdown_spacing(md_content: str) -> str:
@@ -74,9 +97,12 @@ def build_flawless_pdf(md_file: str) -> None:
         print(f"Error: {md_file} not found!")
         return
 
-    # 1. Read and Auto-Format the Markdown
+    # 1. Read, apply config, and Auto-Format the Markdown
     with open(md_file, encoding="utf-8") as f:
         raw_md = f.read()
+
+    config = load_config(md_file)
+    raw_md = apply_config(raw_md, config)
 
     clean_md = fix_markdown_spacing(raw_md)
 

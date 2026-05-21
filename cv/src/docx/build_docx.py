@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 import sys
 
@@ -8,6 +9,27 @@ from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from docx import Document
+
+_DEFAULTS: dict[str, str] = {
+    "name": "[REDACTED] [REDACTED]",
+    "email": "[REDACTED_EMAIL]",
+    "phone": "[REDACTED_PHONE]",
+}
+
+
+def load_config(md_file: str) -> dict[str, str]:
+    config_path = os.path.join(os.path.dirname(md_file), "config.json")
+    if os.path.exists(config_path):
+        with open(config_path, encoding="utf-8") as f:
+            return json.load(f)  # type: ignore[no-any-return]
+    return {}
+
+
+def apply_config(md_content: str, config: dict[str, str]) -> str:
+    merged = {**_DEFAULTS, **config}
+    for key in ("name", "email", "phone"):
+        md_content = md_content.replace("{{ " + key + " }}", merged[key])
+    return md_content
 
 
 def fix_markdown_spacing(md_content: str) -> str:
@@ -29,8 +51,8 @@ def _style_name(paragraph: Paragraph) -> str:
     return paragraph.style.name if paragraph.style is not None else ""
 
 
-def _format_name_header(paragraph: Paragraph) -> bool:
-    if "[REDACTED] [REDACTED]" not in paragraph.text:
+def _format_name_header(paragraph: Paragraph, name: str) -> bool:
+    if name not in paragraph.text:
         return False
     if _style_name(paragraph) not in ["Title", "Heading 1"] and len(paragraph.text) >= 20:
         return False
@@ -87,9 +109,13 @@ def build_styled_docx(input_file: str) -> None:
         print(f"Error: {input_file} not found.")
         return
 
+    config = load_config(input_file)
+
     print("1. Reading and auto-formatting Markdown...")
     with open(input_file, encoding="utf-8") as f:
         raw_md = f.read()
+
+    raw_md = apply_config(raw_md, config)
 
     clean_md = fix_markdown_spacing(raw_md)
 
@@ -117,13 +143,16 @@ def build_styled_docx(input_file: str) -> None:
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     normal.paragraph_format.line_spacing = 1.25
 
+    cfg_name = config.get("name", "[REDACTED] [REDACTED]")
+    cfg_email = config.get("email", "[REDACTED_EMAIL]")
+
     found_name = False
     for paragraph in doc.paragraphs:
-        if _format_name_header(paragraph):
+        if _format_name_header(paragraph, cfg_name):
             found_name = True
             continue
 
-        if found_name and "[REDACTED_EMAIL]" in paragraph.text:
+        if found_name and cfg_email in paragraph.text:
             _format_contact_info(paragraph)
             found_name = False
             continue
