@@ -31,11 +31,4 @@
       python-docx
     ]);
   };
-
-  pre-commit.hooks = {
-    ruff.enable = true;
-    ruff-format.enable = true;
-    shellcheck.enable = true;
-    shfmt.enable = true;
-  };
 }

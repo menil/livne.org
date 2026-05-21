@@ -1,16 +1,16 @@
 # ─── Lint ───────────────────────────────────────────────────
 lint:
-    ruff check cv/
-    shellcheck .githooks/commit-msg
+    ruff check .
+    shellcheck ../.githooks/commit-msg
 
 # ─── Format ─────────────────────────────────────────────────
 format:
-    ruff format cv/
-    shfmt -w .githooks/commit-msg cv/.envrc
+    ruff format .
+    shfmt -w ../.githooks/commit-msg .envrc
 
 check-format:
-    ruff format --check cv/
-    shfmt -d .githooks/commit-msg cv/.envrc
+    ruff format --check .
+    shfmt -d ../.githooks/commit-msg .envrc
 
 # ─── Validate (lint + check format) ─────────────────────────
 validate: lint check-format
