@@ -3,10 +3,11 @@ import os
 import sys
 
 import pypandoc
-from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
+
+from docx import Document
 
 
 def fix_markdown_spacing(md_content: str) -> str:

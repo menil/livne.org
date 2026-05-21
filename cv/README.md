@@ -32,8 +32,8 @@ direnv allow
 just build
 
 # Or run scripts directly
-./src/build_pdf.py resources/cv.md    # generates resources/cv.pdf
-./src/build_docx.py resources/cv.md   # generates resources/cv.docx
+./src/pdf/build_pdf.py resources/cv.md    # generates resources/cv.pdf
+./src/docx/build_docx.py resources/cv.md   # generates resources/cv.docx
 ```
 
 ## Development
@@ -55,9 +55,12 @@ All commands run inside `devenv shell`:
 ```
 cv/
 ├── src/
-│   ├── build_pdf.py     # WeasyPrint PDF builder
-│   ├── build_docx.py    # python-docx DOCX builder
-│   └── style.css        # PDF stylesheet
+│   ├── pdf/
+│   │   ├── build_pdf.py     # WeasyPrint PDF builder
+│   │   └── style.css        # PDF stylesheet
+│   ├── docx/
+│   │   └── build_docx.py    # python-docx DOCX builder
+│   └── __init__.py
 ├── resources/
 │   └── cv.md            # Resume source
 ├── tests/

@@ -18,8 +18,8 @@ test:
 
 # ─── Build (PDF + DOCX) ─────────────────────────────────────
 build:
-    ./src/build_pdf.py resources/cv.md
-    ./src/build_docx.py resources/cv.md
+    ./src/pdf/build_pdf.py resources/cv.md
+    ./src/docx/build_docx.py resources/cv.md
 
 # ─── Type check ─────────────────────────────────────────────
 typecheck:

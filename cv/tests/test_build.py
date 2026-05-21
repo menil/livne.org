@@ -2,11 +2,12 @@ import os
 import subprocess
 import sys
 
-from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
-from src import build_docx, build_pdf
+from docx import Document
+from src.docx import build_docx
+from src.pdf import build_pdf
 
 SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -206,7 +207,7 @@ def test_build_styled_docx_missing_file(tmp_path, capsys):
 
 def test_cli_no_args_pdf():
     result = subprocess.run(
-        [sys.executable, "src/build_pdf.py"],
+        [sys.executable, "src/pdf/build_pdf.py"],
         capture_output=True,
         text=True,
         cwd=SCRIPT_DIR,
@@ -217,7 +218,7 @@ def test_cli_no_args_pdf():
 
 def test_cli_no_args_docx():
     result = subprocess.run(
-        [sys.executable, "src/build_docx.py"],
+        [sys.executable, "src/docx/build_docx.py"],
         capture_output=True,
         text=True,
         cwd=SCRIPT_DIR,

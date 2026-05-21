@@ -1,4 +1,5 @@
-from src import build_docx, build_pdf
+from src.docx import build_docx
+from src.pdf import build_pdf
 
 
 def _both(md: str) -> tuple[str, str]:
