@@ -6,12 +6,12 @@ on:
     paths:
       - 'cv/**'
       - '.githooks/**'
-      - '.github/workflows/**'
+      - '.github/**'
   pull_request:
     paths:
       - 'cv/**'
       - '.githooks/**'
-      - '.github/workflows/**'
+      - '.github/**'
 
 permissions:
   contents: write

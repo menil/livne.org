@@ -4,8 +4,16 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    groups:
+      actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "nix"
     directory: "/cv"
     schedule:
       interval: "monthly"
+    groups:
+      nix:
+        patterns:
+          - "*"
