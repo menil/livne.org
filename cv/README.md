@@ -1,4 +1,5 @@
 # Resume PDF & DOCX Builder
+[![CI](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml/badge.svg)](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml)
 
 Builds a polished PDF and DOCX resume from Markdown using WeasyPrint and Pandoc.
 

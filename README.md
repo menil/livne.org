@@ -1,4 +1,5 @@
 # [REDACTED].org
+[![CI](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml/badge.svg)](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml)
 
 ## Projects
 
