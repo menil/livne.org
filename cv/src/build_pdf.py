@@ -27,9 +27,13 @@ def fix_markdown_spacing(md_content: str) -> str:
 def transform_html(html: str) -> str:
     html = re.sub(
         r"<h3>(.*?)</h3>\s*<p><em>(.*?)</em></p>",
-        '<div class="company-header">'
-        r'<span class="company-name">\1</span>'
-        r'<span class="company-desc">\2</span></div>',
+        lambda m: (
+            '<div class="company-header'
+            + (" page-break" if "Contacts+" in m.group(1) else "")
+            + '">'
+            r'<span class="company-name">' + m.group(1) + "</span>"
+            r'<span class="company-desc">' + m.group(2) + "</span></div>"
+        ),
         html,
         flags=re.DOTALL,
     )

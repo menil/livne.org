@@ -45,7 +45,7 @@ def _format_name_header(paragraph: Paragraph) -> bool:
 
 def _format_contact_info(paragraph: Paragraph) -> None:
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    paragraph.paragraph_format.space_after = Pt(18)
+    paragraph.paragraph_format.space_after = Pt(14)
     for run in paragraph.runs:
         run.font.color.rgb = RGBColor(0x55, 0x55, 0x55)
 
@@ -53,29 +53,29 @@ def _format_contact_info(paragraph: Paragraph) -> None:
 def _format_heading2(paragraph: Paragraph) -> None:
     for run in paragraph.runs:
         run.font.name = "Arial"
-        run.font.size = Pt(13.5)
+        run.font.size = Pt(13)
         run.font.color.rgb = RGBColor(0x29, 0x80, 0xB9)
         run.font.all_caps = True
         run.font.bold = True
-    paragraph.paragraph_format.space_before = Pt(20)
-    paragraph.paragraph_format.space_after = Pt(6)
+    paragraph.paragraph_format.space_before = Pt(16)
+    paragraph.paragraph_format.space_after = Pt(5)
 
 
 def _format_heading3(paragraph: Paragraph) -> None:
     for run in paragraph.runs:
         run.font.name = "Arial"
-        run.font.size = Pt(12)
+        run.font.size = Pt(11)
         run.font.color.rgb = RGBColor(0x1A, 0x25, 0x2F)
         run.font.bold = True
-    paragraph.paragraph_format.space_before = Pt(12)
+    paragraph.paragraph_format.space_before = Pt(10)
     paragraph.paragraph_format.space_after = Pt(2)
     if "Contacts+" in paragraph.text:
         paragraph.paragraph_format.page_break_before = True
 
 
 def _format_job_title(paragraph: Paragraph) -> None:
-    paragraph.paragraph_format.space_before = Pt(8)
-    paragraph.paragraph_format.space_after = Pt(2)
+    paragraph.paragraph_format.space_before = Pt(6)
+    paragraph.paragraph_format.space_after = Pt(1)
 
 
 def build_styled_docx(input_file: str) -> None:
@@ -105,16 +105,16 @@ def build_styled_docx(input_file: str) -> None:
     doc = Document(base_output)
 
     for section in doc.sections:
-        section.top_margin = Inches(0.7)
-        section.bottom_margin = Inches(0.7)
-        section.left_margin = Inches(0.7)
-        section.right_margin = Inches(0.7)
+        section.top_margin = Inches(0.55)
+        section.bottom_margin = Inches(0.55)
+        section.left_margin = Inches(0.6)
+        section.right_margin = Inches(0.6)
 
     normal = doc.styles["Normal"]
     normal.font.name = "Arial"
     normal.font.size = Pt(10.5)
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
-    normal.paragraph_format.line_spacing = 1.3
+    normal.paragraph_format.line_spacing = 1.25
 
     found_name = False
     for paragraph in doc.paragraphs:

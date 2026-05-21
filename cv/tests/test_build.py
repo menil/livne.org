@@ -96,7 +96,7 @@ def test_contact_info_styling():
     _add_run(p, "test@example.com")
     build_docx._format_contact_info(p)
     assert p.alignment == WD_ALIGN_PARAGRAPH.CENTER
-    assert p.paragraph_format.space_after == Pt(18)
+    assert p.paragraph_format.space_after == Pt(14)
     assert p.runs[0].font.color.rgb == RGBColor(0x55, 0x55, 0x55)
 
 
@@ -108,12 +108,12 @@ def test_heading2_styling():
     p = doc.add_paragraph("Experience")
     _add_run(p, "Experience")
     build_docx._format_heading2(p)
-    assert p.runs[0].font.size == Pt(13.5)
+    assert p.runs[0].font.size == Pt(13)
     assert p.runs[0].font.color.rgb == RGBColor(0x29, 0x80, 0xB9)
     assert p.runs[0].font.all_caps
     assert p.runs[0].font.bold
-    assert p.paragraph_format.space_before == Pt(20)
-    assert p.paragraph_format.space_after == Pt(6)
+    assert p.paragraph_format.space_before == Pt(16)
+    assert p.paragraph_format.space_after == Pt(5)
 
 
 # ─── _format_heading3 ─────────────────────────────────────────
@@ -124,10 +124,10 @@ def test_heading3_styling():
     p = doc.add_paragraph("Company Name")
     _add_run(p, "Company Name")
     build_docx._format_heading3(p)
-    assert p.runs[0].font.size == Pt(12)
+    assert p.runs[0].font.size == Pt(11)
     assert p.runs[0].font.color.rgb == RGBColor(0x1A, 0x25, 0x2F)
     assert p.runs[0].font.bold
-    assert p.paragraph_format.space_before == Pt(12)
+    assert p.paragraph_format.space_before == Pt(10)
     assert p.paragraph_format.space_after == Pt(2)
 
 
@@ -155,8 +155,8 @@ def test_job_title_styling():
     p = doc.add_paragraph("Engineer | 2020-2025")
     _add_run(p, "Engineer | 2020-2025")
     build_docx._format_job_title(p)
-    assert p.paragraph_format.space_before == Pt(8)
-    assert p.paragraph_format.space_after == Pt(2)
+    assert p.paragraph_format.space_before == Pt(6)
+    assert p.paragraph_format.space_after == Pt(1)
 
 
 # ─── build_flawless_pdf happy path ────────────────────────────
