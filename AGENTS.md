@@ -6,8 +6,9 @@
   - `build_pdf.py` — Main script: reads Markdown, generates a two-page PDF resume via WeasyPrint.
   - `build_docx.py` — Script to generate a styled DOCX from Markdown.
   - `cv.md` — Resume in Markdown.
-- `devenv.{nix,yaml}` — Nix-based dev environment declaring system libs (pango, glib, cairo) and Python deps.
-- `.envrc` — direnv auto-activation for devenv.
+  - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs + Python deps).
+  - `.envrc` — direnv auto-activation (cds into cv/ and loads devenv).
+- Root `.gitignore` — standard ignores for generated/cache files.
 
 ## Environment
 
