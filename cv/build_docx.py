@@ -6,13 +6,10 @@ import pypandoc
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
+from docx.text.paragraph import Paragraph
 
 
-def fix_markdown_spacing(md_content):
-    """
-    Automatically injects required blank lines before Markdown lists
-    so the parser correctly identifies them as native bullet points.
-    """
+def fix_markdown_spacing(md_content: str) -> str:
     lines = md_content.split("\n")
     out = []
     for i, line in enumerate(lines):
@@ -27,7 +24,57 @@ def fix_markdown_spacing(md_content):
     return "\n".join(out)
 
 
-def build_styled_docx(input_file):
+def _format_name_header(paragraph: Paragraph) -> bool:
+    if "[REDACTED] [REDACTED]" not in paragraph.text:
+        return False
+    if paragraph.style.name not in ["Title", "Heading 1"] and len(paragraph.text) >= 20:
+        return False
+    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for run in paragraph.runs:
+        run.font.name = "Arial"
+        run.font.size = Pt(26)
+        run.font.bold = True
+        run.font.all_caps = True
+        run.font.color.rgb = RGBColor(0x1A, 0x25, 0x2F)
+    return True
+
+
+def _format_contact_info(paragraph: Paragraph) -> None:
+    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    paragraph.paragraph_format.space_after = Pt(18)
+    for run in paragraph.runs:
+        run.font.color.rgb = RGBColor(0x55, 0x55, 0x55)
+
+
+def _format_heading2(paragraph: Paragraph) -> None:
+    for run in paragraph.runs:
+        run.font.name = "Arial"
+        run.font.size = Pt(13.5)
+        run.font.color.rgb = RGBColor(0x29, 0x80, 0xB9)
+        run.font.all_caps = True
+        run.font.bold = True
+    paragraph.paragraph_format.space_before = Pt(20)
+    paragraph.paragraph_format.space_after = Pt(6)
+
+
+def _format_heading3(paragraph: Paragraph) -> None:
+    for run in paragraph.runs:
+        run.font.name = "Arial"
+        run.font.size = Pt(12)
+        run.font.color.rgb = RGBColor(0x1A, 0x25, 0x2F)
+        run.font.bold = True
+    paragraph.paragraph_format.space_before = Pt(12)
+    paragraph.paragraph_format.space_after = Pt(2)
+    if "Contacts+" in paragraph.text:
+        paragraph.paragraph_format.page_break_before = True
+
+
+def _format_job_title(paragraph: Paragraph) -> None:
+    paragraph.paragraph_format.space_before = Pt(8)
+    paragraph.paragraph_format.space_after = Pt(2)
+
+
+def build_styled_docx(input_file: str) -> None:
     base_output = input_file.replace(".md", "_base.docx")
     final_output = input_file.replace(".md", ".docx")
 
@@ -36,7 +83,7 @@ def build_styled_docx(input_file):
         return
 
     print("1. Reading and auto-formatting Markdown...")
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open(input_file, encoding="utf-8") as f:
         raw_md = f.read()
 
     clean_md = fix_markdown_spacing(raw_md)
@@ -53,79 +100,40 @@ def build_styled_docx(input_file):
     print("3. Applying custom executive styling...")
     doc = Document(base_output)
 
-    # Apply 0.7-inch Margins
     for section in doc.sections:
         section.top_margin = Inches(0.7)
         section.bottom_margin = Inches(0.7)
         section.left_margin = Inches(0.7)
         section.right_margin = Inches(0.7)
 
-    # Set Base Typography to Arial 10.5
     normal = doc.styles["Normal"]
     normal.font.name = "Arial"
     normal.font.size = Pt(10.5)
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     normal.paragraph_format.line_spacing = 1.3
 
-    # Direct Paragraph Manipulation
     found_name = False
     for paragraph in doc.paragraphs:
-        # 1. Format the Main Header ([REDACTED] [REDACTED])
-        if "[REDACTED] [REDACTED]" in paragraph.text and (
-            paragraph.style.name in ["Title", "Heading 1"] or len(paragraph.text) < 20
-        ):
-            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            for run in paragraph.runs:
-                run.font.name = "Arial"
-                run.font.size = Pt(26)
-                run.font.bold = True
-                run.font.all_caps = True
-                run.font.color.rgb = RGBColor(0x1A, 0x25, 0x2F)  # Dark Navy
+        if _format_name_header(paragraph):
             found_name = True
             continue
 
-        # 2. Format the Contact Info Line directly underneath
         if found_name and "[REDACTED_EMAIL]" in paragraph.text:
-            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            paragraph.paragraph_format.space_after = Pt(18)
-            for run in paragraph.runs:
-                run.font.color.rgb = RGBColor(0x55, 0x55, 0x55)
+            _format_contact_info(paragraph)
             found_name = False
             continue
 
-        # 3. Format H2 Section Headers (e.g., Professional Experience)
         if paragraph.style.name == "Heading 2":
-            for run in paragraph.runs:
-                run.font.name = "Arial"
-                run.font.size = Pt(13.5)
-                run.font.color.rgb = RGBColor(0x29, 0x80, 0xB9)  # Custom Blue
-                run.font.all_caps = True
-                run.font.bold = True
-            paragraph.paragraph_format.space_before = Pt(20)
-            paragraph.paragraph_format.space_after = Pt(6)
+            _format_heading2(paragraph)
 
-        # 4. Format H3 Company Headers (e.g., Whitepages)
         if paragraph.style.name == "Heading 3":
-            for run in paragraph.runs:
-                run.font.name = "Arial"
-                run.font.size = Pt(12)
-                run.font.color.rgb = RGBColor(0x1A, 0x25, 0x2F)
-                run.font.bold = True
-            paragraph.paragraph_format.space_before = Pt(12)
-            paragraph.paragraph_format.space_after = Pt(2)
+            _format_heading3(paragraph)
 
-            # THE PAGE BREAK FIX: Push Contacts+ to the second page
-            if "Contacts+" in paragraph.text:
-                paragraph.paragraph_format.page_break_before = True
-
-        # 5. Format Job Titles & Dates
         if "|" in paragraph.text and "20" in paragraph.text and paragraph.style.name == "Normal":
-            paragraph.paragraph_format.space_before = Pt(8)
-            paragraph.paragraph_format.space_after = Pt(2)
+            _format_job_title(paragraph)
 
-    # Save and clean up
     doc.save(final_output)
-    os.remove(base_output)  # Delete the unstyled temp file
+    os.remove(base_output)
 
     print(f"Success! Final styled document saved as: {final_output}")
 

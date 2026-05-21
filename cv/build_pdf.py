@@ -7,27 +7,22 @@ import markdown
 import weasyprint
 
 
-def fix_markdown_spacing(md_content):
-    """
-    Automatically injects required blank lines before Markdown lists
-    so the parser doesn't collapse them into a single paragraph.
-    """
+def fix_markdown_spacing(md_content: str) -> str:
     lines = md_content.split("\n")
     out = []
     for i, line in enumerate(lines):
-        # If line is a bullet point, and the previous line isn't empty or a bullet
         if (
             line.strip().startswith("* ")
             and i > 0
             and lines[i - 1].strip() != ""
             and not lines[i - 1].strip().startswith("* ")
         ):
-            out.append("")  # Inject the required blank line
+            out.append("")
         out.append(line)
     return "\n".join(out)
 
 
-def build_flawless_pdf(md_file):
+def build_flawless_pdf(md_file: str) -> None:
     pdf_file = md_file.replace(".md", ".pdf")
 
     if not os.path.exists(md_file):
@@ -35,7 +30,7 @@ def build_flawless_pdf(md_file):
         return
 
     # 1. Read and Auto-Format the Markdown
-    with open(md_file, "r", encoding="utf-8") as f:
+    with open(md_file, encoding="utf-8") as f:
         raw_md = f.read()
 
     clean_md = fix_markdown_spacing(raw_md)

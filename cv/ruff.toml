@@ -5,4 +5,10 @@ target-version = "py312"
 quote-style = "double"
 
 [lint]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "W", "ANN", "C90", "N", "SIM", "PERF", "RUF", "UP", "ARG", "S"]
+
+[lint.per-file-ignores]
+"__init__.py" = ["ANN"]
+
+[lint.mccabe]
+max-complexity = 10
