@@ -99,4 +99,6 @@ jobs:
           body: Auto-built from commit ${{ github.sha }}
           files: |
             cv/resources/cv.md
+            cv/resources/cv.pdf
+            cv/resources/cv.docx
           target_commitish: ${{ github.sha }}

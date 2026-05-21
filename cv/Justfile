@@ -16,5 +16,10 @@ check-format:
 test:
     python -m pytest tests/ -v --cov --cov-config=.coveragerc
 
+# ─── Build (PDF + DOCX) ─────────────────────────────────────
+build:
+    ./src/build_pdf.py resources/cv.md
+    ./src/build_docx.py resources/cv.md
+
 # ─── Validate (lint + check format) ─────────────────────────
 validate: lint check-format
