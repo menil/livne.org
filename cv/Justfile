@@ -14,7 +14,7 @@ check-format:
 
 # ─── Test (unit + integration) ──────────────────────────────
 test:
-    python -m pytest tests/ -v
+    python -m pytest tests/ -v --cov --cov-config=.coveragerc
 
 # ─── Validate (lint + check format) ─────────────────────────
 validate: lint check-format

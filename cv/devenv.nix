@@ -30,6 +30,7 @@
       pypandoc
       python-docx
       pytest
+      pytest-cov
     ]);
   };
 }
