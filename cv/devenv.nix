@@ -13,6 +13,7 @@
     ruff
     shellcheck
     shfmt
+    just
   ];
 
   env.FONTCONFIG_FILE = "${pkgs.fontconfig.out}/etc/fonts/fonts.conf";

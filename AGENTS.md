@@ -19,9 +19,13 @@ All development and execution happens inside the devenv shell. Run `devenv shell
 - Python 3.x, no type annotations currently.
 - Shebang is `#!/usr/bin/env python3` — only works inside the devenv shell.
 - Scripts accept input via command-line argument, not hard-coded paths.
-- Formatting: keep existing style (no automatic formatter configured).
 - Commits must follow [Conventional Commits](https://www.conventionalcommits.org/):
   - Title: `type(scope): subject` (max 72 chars)
   - Body lines: max 72 chars
   - Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
   - Enforced locally via `.githooks/commit-msg` and in CI.
+- Formatting/linting via `just`:
+  - `just lint` — ruff (Python), shellcheck (shell)
+  - `just format` — ruff format + shfmt
+  - `just validate` — lint + check-format
+  - Pre-commit hooks and CI all use the same tools/configs.

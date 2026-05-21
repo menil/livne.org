@@ -21,11 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
-      - name: Run pre-commit checks
+      - name: Run lint and format checks
         working-directory: ./cv
         run: |
           nix profile install nixpkgs#devenv
-          devenv shell bash -e -c 'pre-commit run --all-files'
+          devenv shell bash -e -c 'just validate'
 
   build:
     runs-on: ubuntu-latest
