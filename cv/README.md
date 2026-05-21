@@ -21,6 +21,6 @@ direnv allow
 ## Usage
 
 ```sh
-./build_pdf.py cv.md   # generates cv.pdf
-./build_docx.py cv.md  # generates cv.docx
+./src/build_pdf.py resources/cv.md   # generates cv.pdf
+./src/build_docx.py resources/cv.md  # generates cv.docx
 ```

@@ -40,7 +40,7 @@ def test_build_pdf():
 
         script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         result = subprocess.run(
-            [sys.executable, "build_pdf.py", md_path],
+            [sys.executable, "src/build_pdf.py", md_path],
             capture_output=True,
             text=True,
             cwd=script_dir,
@@ -57,7 +57,7 @@ def test_build_docx():
 
         script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         result = subprocess.run(
-            [sys.executable, "build_docx.py", md_path],
+            [sys.executable, "src/build_docx.py", md_path],
             capture_output=True,
             text=True,
             cwd=script_dir,

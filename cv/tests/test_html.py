@@ -1,4 +1,4 @@
-import build_pdf
+from src import build_pdf
 
 
 def test_company_header():

@@ -86,7 +86,7 @@ jobs:
 
       - name: Generate PDF and DOCX
         working-directory: ./cv
-        run: devenv shell bash -e -c './build_pdf.py cv.md && ./build_docx.py cv.md'
+        run: devenv shell bash -e -c './src/build_pdf.py resources/cv.md && ./src/build_docx.py resources/cv.md'
 
       - name: Generate date tag
         id: date
@@ -98,7 +98,5 @@ jobs:
           name: CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}
           body: Auto-built from commit ${{ github.sha }}
           files: |
-            cv/cv.md
-            cv/cv.pdf
-            cv/cv.docx
+            cv/resources/cv.md
           target_commitish: ${{ github.sha }}
