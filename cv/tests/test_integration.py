@@ -64,3 +64,25 @@ def test_build_docx():
         )
         assert result.returncode == 0, f"build_docx.py failed: {result.stderr}"
         _check_file(os.path.join(tmp, "test.docx"), b"PK", "DOCX")
+
+
+def test_build_html():
+    with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
+        md_path = os.path.join(tmp, "test.md")
+        with open(md_path, "w") as f:
+            f.write(SAMPLE_MD)
+
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        result = subprocess.run(
+            [sys.executable, "src/html/build_html.py", md_path],
+            capture_output=True,
+            text=True,
+            cwd=script_dir,
+        )
+        assert result.returncode == 0, f"build_html.py failed: {result.stderr}"
+        html_path = os.path.join(tmp, "test.html")
+        assert os.path.exists(html_path), "HTML output not found"
+        size = os.path.getsize(html_path)
+        assert size > 100, f"HTML output too small ({size} bytes)"
+        with open(html_path) as f:
+            assert "<!DOCTYPE html>" in f.read()

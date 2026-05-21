@@ -7,6 +7,7 @@ from docx.shared import Pt, RGBColor
 
 from docx import Document
 from src.docx import build_docx
+from src.html import build_html
 from src.pdf import build_pdf
 
 SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -205,6 +206,29 @@ def test_build_styled_docx_missing_file(tmp_path, capsys):
     assert "not found" in captured.out
 
 
+# ─── build_web_html happy path ────────────────────────────────
+
+
+def test_build_html_happy_path(tmp_path):
+    md_file = tmp_path / "test.md"
+    md_file.write_text(SAMPLE_MD)
+    html_file = tmp_path / "test.html"
+    build_html.build_web_html(str(md_file))
+    assert html_file.exists()
+    assert html_file.stat().st_size > 100
+    with open(html_file) as f:
+        content = f.read()
+    assert "<!DOCTYPE html>" in content
+    assert "[REDACTED] [REDACTED]" in content
+
+
+def test_build_html_missing_file(tmp_path, capsys):
+    missing = tmp_path / "nonexistent.md"
+    build_html.build_web_html(str(missing))
+    captured = capsys.readouterr()
+    assert "not found" in captured.out
+
+
 # ─── CLI entry points ─────────────────────────────────────────
 
 
@@ -222,6 +246,17 @@ def test_cli_no_args_pdf():
 def test_cli_no_args_docx():
     result = subprocess.run(
         [sys.executable, "src/docx/build_docx.py"],
+        capture_output=True,
+        text=True,
+        cwd=SCRIPT_DIR,
+    )
+    assert result.returncode == 1
+    assert "Usage:" in result.stdout
+
+
+def test_cli_no_args_html():
+    result = subprocess.run(
+        [sys.executable, "src/html/build_html.py"],
         capture_output=True,
         text=True,
         cwd=SCRIPT_DIR,

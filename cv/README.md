@@ -28,12 +28,13 @@ direnv allow
 ## Usage
 
 ```sh
-# Build PDF and DOCX
+# Build all outputs (PDF, DOCX, HTML)
 just build
 
 # Or run scripts directly
-./src/pdf/build_pdf.py resources/cv.md    # generates resources/cv.pdf
+./src/pdf/build_pdf.py resources/cv.md     # generates resources/cv.pdf
 ./src/docx/build_docx.py resources/cv.md   # generates resources/cv.docx
+./src/html/build_html.py resources/cv.md   # generates resources/cv.html
 ```
 
 ## Development
@@ -47,7 +48,7 @@ All commands run inside `devenv shell`:
 | `just check-format` | Check formatting without changes |
 | `just typecheck` | mypy strict mode on `src/` |
 | `just test` | pytest + coverage (threshold: 90%) |
-| `just build` | Generate PDF and DOCX |
+| `just build` | Generate PDF, DOCX, and HTML |
 | `just validate` | Run lint + format-check + typecheck + test |
 
 ## Project structure
@@ -60,6 +61,10 @@ cv/
 │   │   └── style.css        # PDF stylesheet
 │   ├── docx/
 │   │   └── build_docx.py    # python-docx DOCX builder
+│   ├── html/
+│   │   ├── build_html.py    # Static HTML resume builder
+│   │   ├── style-web.css    # Web stylesheet
+│   │   └── template.html    # Jinja2 HTML wrapper template
 │   └── __init__.py
 ├── resources/
 │   └── cv.md            # Resume source

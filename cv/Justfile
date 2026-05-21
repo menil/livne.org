@@ -20,6 +20,7 @@ test:
 build:
     ./src/pdf/build_pdf.py resources/cv.md
     ./src/docx/build_docx.py resources/cv.md
+    ./src/html/build_html.py resources/cv.md
 
 # ─── Type check ─────────────────────────────────────────────
 typecheck:
