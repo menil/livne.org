@@ -4,13 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'cv/cv.md'
-      - 'cv/build_pdf.py'
-      - 'cv/build_docx.py'
-      - 'devenv.nix'
-      - 'devenv.yaml'
-      - 'devenv.lock'
-      - '.github/workflows/build.yml'
+      - 'cv/**'
+      - '.githooks/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: write
