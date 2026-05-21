@@ -95,7 +95,7 @@ jobs:
       - uses: softprops/action-gh-release@v3
         with:
           tag_name: cv-${{ steps.date.outputs.short }}-${{ github.run_number }}
-          name: CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}
+          name: "CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}"
           body: Auto-built from commit ${{ github.sha }}
           files: |
             cv/resources/cv.md
