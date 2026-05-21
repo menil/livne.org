@@ -10,7 +10,8 @@ Principal Software Engineer and Technical Architect specializing in highly scala
 
 **Principal Software Engineer, Data & Web** | 2020-2026
 * Spearheaded generative AI integration into core engineering workflows by driving the adoption and establishing organizational standards for AI coding using Claude Code, accelerating overall developer velocity
-* Led the ground-up architecture and launch of a new consumer PropTech platform, integrating predictive machine learning models to generate automated, high-accuracy property valuations and rental income estimates at scale. As part of this initiative, led the implementation of Landon, the Whitepages AI real estate assistant using AWS Bedrock, RAG architecture and LLM integration
+* Led the ground-up architecture and launch of a new consumer PropTech platform, engineering a highly scalable Typescript backend deployed on Cloudflare workers, integrating predictive machine learning models built in Python to generate automated, high-accuracy property valuations and rental income estimates at scale
+* Led the implementation of Landon, the Whitepages AI real estate assistant using AWS Bedrock, OpenSearch-backed RAG architecture and LLM integration
 * Conceptualized and drove the implementation of a centralized internal platform that accelerated the marketing department's experimentation velocity by 3x, directly unlocking new company revenue streams and earning the CEO spot bonus for outstanding business impact
 * Partnered with the marketing department to drive conversion rate optimization (CRO) across user-facing properties, championing strict architectural standards for Core Web Vitals and technical SEO that directly improved organic reach and user acquisition
 * Fostered a culture of engineering excellence by mentoring cross-functional teams, leading technical training sessions, and establishing best practices for system architecture
