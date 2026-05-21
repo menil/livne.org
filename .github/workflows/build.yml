@@ -86,7 +86,7 @@ jobs:
 
       - name: Generate PDF and DOCX
         working-directory: ./cv
-        run: devenv shell bash -e -c './src/build_pdf.py resources/cv.md && ./src/build_docx.py resources/cv.md'
+        run: devenv shell bash -e -c 'just build'
 
       - name: Generate date tag
         id: date
