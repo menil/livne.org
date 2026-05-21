@@ -10,6 +10,9 @@
     fontconfig
     liberation_ttf
     pandoc
+    ruff
+    shellcheck
+    shfmt
   ];
 
   env.FONTCONFIG_FILE = "${pkgs.fontconfig.out}/etc/fonts/fonts.conf";
@@ -26,5 +29,12 @@
       pypandoc
       python-docx
     ]);
+  };
+
+  pre-commit.hooks = {
+    ruff.enable = true;
+    ruff-format.enable = true;
+    shellcheck.enable = true;
+    shfmt.enable = true;
   };
 }
