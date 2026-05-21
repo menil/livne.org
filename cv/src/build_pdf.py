@@ -6,6 +6,8 @@ import sys
 import markdown
 import weasyprint
 
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def fix_markdown_spacing(md_content: str) -> str:
     lines = md_content.split("\n")
@@ -80,140 +82,22 @@ def build_flawless_pdf(md_file: str) -> None:
     # 3. TRANSLATION LAYER: Convert standard HTML to our Custom Layout
     html_body = transform_html(html_body)
 
-    # 4. Wrap in the Perfectly Calibrated Two-Page CSS Engine
-    full_html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-        @page {{
-            size: Letter;
-            margin: 18mm 18mm;
-            background-color: #fafbfd;
-        }}
-        body {{
-            font-family: 'Liberation Sans', sans-serif;
-            color: #333333;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-            font-size: 10.5pt;
-        }}
-        h1 {{
-            font-size: 26pt;
-            color: #1a252f;
-            margin: 0 0 6px 0;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-align: center;
-        }}
-        h1 + p {{
-            text-align: center;
-            font-size: 10.5pt;
-            color: #555555;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid #e0e6ed;
-        }}
-        h1 + p + p {{
-            font-size: 10.5pt;
-            margin-bottom: 22px;
-            text-align: justify;
-            padding: 0 5px;
-        }}
-        h2 {{
-            font-size: 13.5pt;
-            color: #2980b9;
-            border-bottom: 1px solid #c8d6e5;
-            padding-bottom: 5px;
-            margin-top: 20px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }}
+    # 4. Wrap in CSS engine from external file
+    css_path = os.path.join(_SCRIPT_DIR, "style.css")
+    with open(css_path, encoding="utf-8") as f:
+        css_content = f.read()
 
-        .company-header {{
-            margin-top: 14px;
-            margin-bottom: 6px;
-            page-break-after: avoid;
-        }}
-        .company-name {{
-            font-size: 12.5pt;
-            font-weight: bold;
-            color: #1a252f;
-        }}
-        .company-desc {{
-            font-style: italic;
-            color: #666666;
-            font-size: 9.5pt;
-            display: block;
-            margin-top: 2px;
-        }}
-        .role-header {{
-            margin-top: 8px;
-            margin-bottom: 4px;
-            clear: both;
-            page-break-after: avoid;
-        }}
-        .role-title {{
-            font-weight: bold;
-            color: #34495e;
-            font-size: 11pt;
-        }}
-        .role-date {{
-            float: right;
-            font-weight: bold;
-            color: #2980b9;
-            font-size: 10.5pt;
-        }}
-
-        ul {{
-            margin-top: 5px;
-            margin-bottom: 14px;
-            padding-left: 18px;
-        }}
-        li {{
-            margin-bottom: 6px;
-            text-align: justify;
-        }}
-
-        .skills-table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 6px;
-            margin-bottom: 18px;
-        }}
-        .skills-table td {{
-            padding: 5px 0;
-            vertical-align: top;
-        }}
-        .skill-cat {{
-            font-weight: bold;
-            width: 25%;
-            color: #2c3e50;
-        }}
-        .skill-list {{
-            width: 75%;
-            color: #444444;
-            text-align: justify;
-        }}
-        .early-career td {{
-            padding: 3px 0;
-        }}
-
-        .education {{
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 11pt;
-            padding-bottom: 15px;
-        }}
-    </style>
-    </head>
-    <body>
-        {html_body}
-    </body>
-    </html>
-    """
+    full_html = f"""<!DOCTYPE html>
+<html>
+<head>
+<style>
+{css_content}
+</style>
+</head>
+<body>
+{html_body}
+</body>
+</html>"""
 
     # 5. Generate the final file
     print("Generating perfectly matched, two-page PDF...")
