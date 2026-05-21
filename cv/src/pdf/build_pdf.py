@@ -1,42 +1,18 @@
 #!/usr/bin/env python3
-import json
 import os
 import re
 import sys
 
-import jinja2
 import markdown
 import weasyprint
 
+if __name__ == "__main__":
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.insert(0, _project_root)
+
+from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def load_config(md_file: str) -> dict[str, str]:
-    config_path = os.path.join(os.path.dirname(md_file), "config.json")
-    if os.path.exists(config_path):
-        with open(config_path, encoding="utf-8") as f:
-            return json.load(f)  # type: ignore[no-any-return]
-    return {}
-
-
-def apply_config(md_content: str, config: dict[str, str]) -> str:
-    tpl = jinja2.Template(md_content)
-    return tpl.render(**config)
-
-
-def fix_markdown_spacing(md_content: str) -> str:
-    lines = md_content.split("\n")
-    out = []
-    for i, line in enumerate(lines):
-        if (
-            line.strip().startswith("* ")
-            and i > 0
-            and lines[i - 1].strip() != ""
-            and not lines[i - 1].strip().startswith("* ")
-        ):
-            out.append("")
-        out.append(line)
-    return "\n".join(out)
 
 
 def transform_html(html: str) -> str:
@@ -87,30 +63,18 @@ def build_flawless_pdf(md_file: str) -> None:
         print(f"Error: {md_file} not found!")
         return
 
-    # 1. Read, apply config, and Auto-Format the Markdown
     with open(md_file, encoding="utf-8") as f:
         raw_md = f.read()
 
     config = load_config(md_file)
     raw_md = apply_config(raw_md, config)
 
-    # Derive output filename from config name
-    name = config.get("name", "")
-    if name:
-        slug = name.lower().replace(" ", "_")
-        pdf_file = os.path.join(os.path.dirname(md_file), f"{slug}_resume.pdf")
-    else:
-        pdf_file = md_file.replace(".md", ".pdf")
-
+    pdf_file = config_output_path(md_file, config, "pdf")
     clean_md = fix_markdown_spacing(raw_md)
 
-    # 2. Convert to pristine HTML
     html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
-
-    # 3. TRANSLATION LAYER: Convert standard HTML to our Custom Layout
     html_body = transform_html(html_body)
 
-    # 4. Wrap in CSS engine from external file
     css_path = os.path.join(_SCRIPT_DIR, "style.css")
     with open(css_path, encoding="utf-8") as f:
         css_content = f.read()
@@ -127,7 +91,6 @@ def build_flawless_pdf(md_file: str) -> None:
 </body>
 </html>"""
 
-    # 5. Generate the final file
     print("Generating perfectly matched, two-page PDF...")
     weasyprint.HTML(string=full_html).write_pdf(pdf_file)
     print(f"Success! Created {pdf_file}")

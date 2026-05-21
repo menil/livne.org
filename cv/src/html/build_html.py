@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 import os
 import re
 import sys
@@ -7,35 +6,13 @@ import sys
 import jinja2
 import markdown
 
+if __name__ == "__main__":
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.insert(0, _project_root)
+
+from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def load_config(md_file: str) -> dict[str, str]:
-    config_path = os.path.join(os.path.dirname(md_file), "config.json")
-    if os.path.exists(config_path):
-        with open(config_path, encoding="utf-8") as f:
-            return json.load(f)  # type: ignore[no-any-return]
-    return {}
-
-
-def apply_config(md_content: str, config: dict[str, str]) -> str:
-    tpl = jinja2.Template(md_content)
-    return tpl.render(**config)
-
-
-def fix_markdown_spacing(md_content: str) -> str:
-    lines = md_content.split("\n")
-    out = []
-    for i, line in enumerate(lines):
-        if (
-            line.strip().startswith("* ")
-            and i > 0
-            and lines[i - 1].strip() != ""
-            and not lines[i - 1].strip().startswith("* ")
-        ):
-            out.append("")
-        out.append(line)
-    return "\n".join(out)
 
 
 def transform_html(html: str) -> str:
@@ -94,13 +71,7 @@ def build_web_html(md_file: str) -> None:
     config.pop("phone", None)
     raw_md = apply_config(raw_md, config)
 
-    # Derive output filename from config name
-    name = config.get("name", "")
-    if name:
-        slug = name.lower().replace(" ", "_")
-        html_file = os.path.join(os.path.dirname(md_file), f"{slug}_resume.html")
-    else:
-        html_file = md_file.replace(".md", ".html")
+    html_file = config_output_path(md_file, config, "html")
 
     clean_md = fix_markdown_spacing(raw_md)
     html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])

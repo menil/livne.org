@@ -1,13 +1,11 @@
-from src.docx import build_docx
-from src.html import build_html
-from src.pdf import build_pdf
+from src.common import fix_markdown_spacing
 
 
 def _all(md: str) -> tuple[str, str, str]:
     return (
-        build_pdf.fix_markdown_spacing(md),
-        build_docx.fix_markdown_spacing(md),
-        build_html.fix_markdown_spacing(md),
+        fix_markdown_spacing(md),
+        fix_markdown_spacing(md),
+        fix_markdown_spacing(md),
     )
 
 

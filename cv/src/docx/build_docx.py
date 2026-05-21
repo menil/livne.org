@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-import json
 import os
 import sys
 
-import jinja2
 import pypandoc
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
@@ -11,33 +9,11 @@ from docx.text.paragraph import Paragraph
 
 from docx import Document
 
+if __name__ == "__main__":
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.insert(0, _project_root)
 
-def load_config(md_file: str) -> dict[str, str]:
-    config_path = os.path.join(os.path.dirname(md_file), "config.json")
-    if os.path.exists(config_path):
-        with open(config_path, encoding="utf-8") as f:
-            return json.load(f)  # type: ignore[no-any-return]
-    return {}
-
-
-def apply_config(md_content: str, config: dict[str, str]) -> str:
-    tpl = jinja2.Template(md_content)
-    return tpl.render(**config)
-
-
-def fix_markdown_spacing(md_content: str) -> str:
-    lines = md_content.split("\n")
-    out = []
-    for i, line in enumerate(lines):
-        if (
-            line.strip().startswith("* ")
-            and i > 0
-            and lines[i - 1].strip() != ""
-            and not lines[i - 1].strip().startswith("* ")
-        ):
-            out.append("")
-        out.append(line)
-    return "\n".join(out)
+from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
 
 
 def _style_name(paragraph: Paragraph) -> str:
@@ -101,15 +77,8 @@ def build_styled_docx(input_file: str) -> None:
 
     config = load_config(input_file)
 
-    # Derive output filenames from config name
-    name = config.get("name", "")
-    if name:
-        slug = name.lower().replace(" ", "_")
-        base_output = os.path.join(os.path.dirname(input_file), f"{slug}_resume_base.docx")
-        final_output = os.path.join(os.path.dirname(input_file), f"{slug}_resume.docx")
-    else:
-        base_output = input_file.replace(".md", "_base.docx")
-        final_output = input_file.replace(".md", ".docx")
+    final_output = config_output_path(input_file, config, "docx")
+    base_output = final_output.replace(".docx", "_base.docx")
 
     print("1. Reading and auto-formatting Markdown...")
     with open(input_file, encoding="utf-8") as f:
