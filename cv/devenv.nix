@@ -29,6 +29,7 @@
       markdown
       pypandoc
       python-docx
+      pytest
     ]);
   };
 }

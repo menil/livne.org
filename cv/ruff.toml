@@ -9,6 +9,7 @@ select = ["E", "F", "I", "W", "ANN", "C90", "N", "SIM", "PERF", "RUF", "UP", "AR
 
 [lint.per-file-ignores]
 "__init__.py" = ["ANN"]
+"tests/*" = ["ANN", "ARG", "S"]
 
 [lint.mccabe]
 max-complexity = 10

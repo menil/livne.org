@@ -22,6 +22,45 @@ def fix_markdown_spacing(md_content: str) -> str:
     return "\n".join(out)
 
 
+def transform_html(html: str) -> str:
+    html = re.sub(
+        r"<h3>(.*?)</h3>\s*<p><em>(.*?)</em></p>",
+        '<div class="company-header">'
+        r'<span class="company-name">\1</span>'
+        r'<span class="company-desc">\2</span></div>',
+        html,
+        flags=re.DOTALL,
+    )
+    html = re.sub(
+        r"<p><strong>(.*?)</strong>\s*\|\s*(.*?)</p>",
+        '<div class="role-header">'
+        r'<span class="role-title">\1</span>'
+        r'<span class="role-date">\2</span></div>',
+        html,
+        flags=re.DOTALL,
+    )
+    html = re.sub(
+        r"<li><strong>(.*?)</strong>:\s*(.*?)</li>",
+        r'<tr><td class="skill-cat">\1</td><td class="skill-list">\2</td></tr>',
+        html,
+        flags=re.DOTALL,
+    )
+    html = re.sub(r"<ul>(\s*<tr>)", r'<table class="skills-table">\1', html)
+    html = re.sub(r"(</tr>\s*)</ul>", r"\1</table>", html)
+    html = re.sub(
+        r'(<h2>Early Career History</h2>\s*)<table class="skills-table">',
+        r'\1<table class="skills-table early-career">',
+        html,
+    )
+    html = re.sub(
+        r"<h2>Education</h2>\s*<ul>\s*<li>(.*?)</li>\s*</ul>",
+        r'<h2>Education</h2>\n<div class="education">\1</div>',
+        html,
+        flags=re.DOTALL,
+    )
+    return html
+
+
 def build_flawless_pdf(md_file: str) -> None:
     pdf_file = md_file.replace(".md", ".pdf")
 
@@ -39,51 +78,7 @@ def build_flawless_pdf(md_file: str) -> None:
     html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
 
     # 3. TRANSLATION LAYER: Convert standard HTML to our Custom Layout
-
-    # Fix Company Headers
-    html_body = re.sub(
-        r"<h3>(.*?)</h3>\s*<p><em>(.*?)</em></p>",
-        '<div class="company-header">'
-        r'<span class="company-name">\1</span>'
-        r'<span class="company-desc">\2</span></div>',
-        html_body,
-        flags=re.DOTALL,
-    )
-
-    # Fix Role Headers (Splits Title and Date so Date floats right)
-    html_body = re.sub(
-        r"<p><strong>(.*?)</strong>\s*\|\s*(.*?)</p>",
-        '<div class="role-header">'
-        r'<span class="role-title">\1</span>'
-        r'<span class="role-date">\2</span></div>',
-        html_body,
-        flags=re.DOTALL,
-    )
-
-    # Fix Skills & Early Career Tables
-    html_body = re.sub(
-        r"<li><strong>(.*?)</strong>:\s*(.*?)</li>",
-        r'<tr><td class="skill-cat">\1</td><td class="skill-list">\2</td></tr>',
-        html_body,
-        flags=re.DOTALL,
-    )
-    html_body = re.sub(r"<ul>(\s*<tr>)", r'<table class="skills-table">\1', html_body)
-    html_body = re.sub(r"(</tr>\s*)</ul>", r"\1</table>", html_body)
-
-    # Reduce spacing for the Early Career section
-    html_body = re.sub(
-        r'(<h2>Early Career History</h2>\s*)<table class="skills-table">',
-        r'\1<table class="skills-table early-career">',
-        html_body,
-    )
-
-    # Fix Education Formatting
-    html_body = re.sub(
-        r"<h2>Education</h2>\s*<ul>\s*<li>(.*?)</li>\s*</ul>",
-        r'<h2>Education</h2>\n<div class="education">\1</div>',
-        html_body,
-        flags=re.DOTALL,
-    )
+    html_body = transform_html(html_body)
 
     # 4. Wrap in the Perfectly Calibrated Two-Page CSS Engine
     full_html = f"""

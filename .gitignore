@@ -1,5 +1,6 @@
 .devenv/
 __pycache__/
 *.pyc
+.pytest_cache/
 *.pdf
 *.docx
