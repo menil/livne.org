@@ -6,4 +6,4 @@ __pycache__/
 htmlcov/
 *.pdf
 *.docx
-resources/*.html
+**/resources/*.html
