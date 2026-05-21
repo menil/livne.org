@@ -3,18 +3,13 @@ import json
 import os
 import sys
 
+import jinja2
 import pypandoc
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from docx import Document
-
-_DEFAULTS: dict[str, str] = {
-    "name": "[REDACTED] [REDACTED]",
-    "email": "[REDACTED_EMAIL]",
-    "phone": "[REDACTED_PHONE]",
-}
 
 
 def load_config(md_file: str) -> dict[str, str]:
@@ -26,10 +21,8 @@ def load_config(md_file: str) -> dict[str, str]:
 
 
 def apply_config(md_content: str, config: dict[str, str]) -> str:
-    merged = {**_DEFAULTS, **config}
-    for key in ("name", "email", "phone"):
-        md_content = md_content.replace("{{ " + key + " }}", merged[key])
-    return md_content
+    tpl = jinja2.Template(md_content)
+    return tpl.render(**config)
 
 
 def fix_markdown_spacing(md_content: str) -> str:

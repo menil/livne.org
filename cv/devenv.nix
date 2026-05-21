@@ -27,6 +27,7 @@
     package = pkgs.python3.withPackages (ps: with ps; [
       weasyprint
       markdown
+      jinja2
       pypandoc
       python-docx
       pytest
