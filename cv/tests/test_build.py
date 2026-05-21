@@ -164,6 +164,16 @@ def test_job_title_styling():
     assert p.paragraph_format.space_after == Pt(1)
 
 
+# ─── helpers ────────────────────────────────────────────────
+
+
+def _write_json(path, data):
+    import json
+
+    with open(path, "w") as f:
+        json.dump(data, f)
+
+
 # ─── build_flawless_pdf happy path ────────────────────────────
 
 
@@ -183,6 +193,13 @@ def test_build_flawless_pdf_missing_file(tmp_path, capsys):
     build_pdf.build_flawless_pdf(str(missing))
     captured = capsys.readouterr()
     assert "not found" in captured.out
+
+
+def test_build_flawless_pdf_with_config(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
+    build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"))
+    assert (tmp_path / "jane_doe_resume.pdf").exists()
 
 
 # ─── build_styled_docx happy path ─────────────────────────────
@@ -206,6 +223,13 @@ def test_build_styled_docx_missing_file(tmp_path, capsys):
     assert "not found" in captured.out
 
 
+def test_build_styled_docx_with_config(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
+    build_docx.build_styled_docx(str(tmp_path / "cv.md"))
+    assert (tmp_path / "jane_doe_resume.docx").exists()
+
+
 # ─── build_web_html happy path ────────────────────────────────
 
 
@@ -220,6 +244,8 @@ def test_build_html_happy_path(tmp_path):
         content = f.read()
     assert "<!DOCTYPE html>" in content
     assert "[REDACTED] [REDACTED]" in content
+    assert 'href="mailto:[REDACTED_EMAIL]"' in content
+    assert "Download PDF" in content
 
 
 def test_build_html_missing_file(tmp_path, capsys):
@@ -227,6 +253,17 @@ def test_build_html_missing_file(tmp_path, capsys):
     build_html.build_web_html(str(missing))
     captured = capsys.readouterr()
     assert "not found" in captured.out
+
+
+def test_build_html_with_config(tmp_path):
+    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
+    build_html.build_web_html(str(tmp_path / "cv.md"))
+    html_file = tmp_path / "jane_doe_resume.html"
+    assert html_file.exists()
+    with open(html_file) as f:
+        content = f.read()
+    assert "Jane Doe" in content
 
 
 # ─── CLI entry points ─────────────────────────────────────────

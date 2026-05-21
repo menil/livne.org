@@ -95,14 +95,21 @@ def _format_job_title(paragraph: Paragraph) -> None:
 
 
 def build_styled_docx(input_file: str) -> None:
-    base_output = input_file.replace(".md", "_base.docx")
-    final_output = input_file.replace(".md", ".docx")
-
     if not os.path.exists(input_file):
         print(f"Error: {input_file} not found.")
         return
 
     config = load_config(input_file)
+
+    # Derive output filenames from config name
+    name = config.get("name", "")
+    if name:
+        slug = name.lower().replace(" ", "_")
+        base_output = os.path.join(os.path.dirname(input_file), f"{slug}_resume_base.docx")
+        final_output = os.path.join(os.path.dirname(input_file), f"{slug}_resume.docx")
+    else:
+        base_output = input_file.replace(".md", "_base.docx")
+        final_output = input_file.replace(".md", ".docx")
 
     print("1. Reading and auto-formatting Markdown...")
     with open(input_file, encoding="utf-8") as f:

@@ -1,3 +1,4 @@
+from src.html import build_html
 from src.pdf import build_pdf
 
 
@@ -48,3 +49,9 @@ def test_no_op_for_plain_html():
     html = "<p>Hello world</p>"
     result = build_pdf.transform_html(html)
     assert result.strip() == html.strip()
+
+
+def test_mailto_link():
+    html = "<p>Contact me at user@example.com today.</p>"
+    result = build_html.transform_html(html)
+    assert '<a href="mailto:user@example.com">user@example.com</a>' in result

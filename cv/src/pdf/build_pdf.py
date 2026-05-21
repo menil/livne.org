@@ -83,8 +83,6 @@ def transform_html(html: str) -> str:
 
 
 def build_flawless_pdf(md_file: str) -> None:
-    pdf_file = md_file.replace(".md", ".pdf")
-
     if not os.path.exists(md_file):
         print(f"Error: {md_file} not found!")
         return
@@ -95,6 +93,14 @@ def build_flawless_pdf(md_file: str) -> None:
 
     config = load_config(md_file)
     raw_md = apply_config(raw_md, config)
+
+    # Derive output filename from config name
+    name = config.get("name", "")
+    if name:
+        slug = name.lower().replace(" ", "_")
+        pdf_file = os.path.join(os.path.dirname(md_file), f"{slug}_resume.pdf")
+    else:
+        pdf_file = md_file.replace(".md", ".pdf")
 
     clean_md = fix_markdown_spacing(raw_md)
 

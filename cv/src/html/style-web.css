@@ -146,6 +146,36 @@ li {
     padding-bottom: 20px;
 }
 
+.action-links {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.action-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin: 0 6px;
+    background-color: var(--accent-blue);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.action-link:hover {
+    background-color: #1f6ba0;
+}
+
+.action-link svg {
+    width: 20px;
+    height: 20px;
+}
+
 @media (max-width: 600px) {
     body {
         padding: 0;

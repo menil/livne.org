@@ -74,12 +74,15 @@ def transform_html(html: str) -> str:
         html,
         flags=re.DOTALL,
     )
+    html = re.sub(
+        r"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})",
+        r'<a href="mailto:\1">\1</a>',
+        html,
+    )
     return html
 
 
 def build_web_html(md_file: str) -> None:
-    html_file = md_file.replace(".md", ".html")
-
     if not os.path.exists(md_file):
         print(f"Error: {md_file} not found!")
         return
@@ -88,7 +91,16 @@ def build_web_html(md_file: str) -> None:
         raw_md = f.read()
 
     config = load_config(md_file)
+    config.pop("phone", None)
     raw_md = apply_config(raw_md, config)
+
+    # Derive output filename from config name
+    name = config.get("name", "")
+    if name:
+        slug = name.lower().replace(" ", "_")
+        html_file = os.path.join(os.path.dirname(md_file), f"{slug}_resume.html")
+    else:
+        html_file = md_file.replace(".md", ".html")
 
     clean_md = fix_markdown_spacing(raw_md)
     html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
@@ -103,10 +115,17 @@ def build_web_html(md_file: str) -> None:
         tpl_content = f.read()
 
     config_name = config.get("name", "[REDACTED] [REDACTED]")
+    slug = config_name.lower().replace(" ", "_")
+    pdf_url = f"{slug}_resume.pdf"
+    linkedin_url = config.get("linkedin", "")
+    email = config.get("email", "")
     full_html = jinja2.Template(tpl_content).render(
         title=f"{config_name} - Principal Software Engineer",
         css_content=css_content,
         html_body=html_body,
+        linkedin_url=linkedin_url,
+        pdf_url=pdf_url,
+        email=email,
     )
 
     with open(html_file, "w", encoding="utf-8") as f:
