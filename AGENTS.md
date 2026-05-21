@@ -7,7 +7,7 @@
   - `build_docx.py` — Script to generate a styled DOCX from Markdown.
   - `cv.md` — Resume in Markdown.
   - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs + Python deps).
-  - `.envrc` — direnv auto-activation (cds into cv/ and loads devenv).
+  - `.envrc` — direnv auto-activation.
 - Root `.gitignore` — standard ignores for generated/cache files.
 
 ## Environment
