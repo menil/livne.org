@@ -12,5 +12,9 @@ check-format:
     ruff format --check .
     shfmt -d ../.githooks/commit-msg .envrc
 
+# ─── Test (build + validate output) ─────────────────────────
+test:
+    ./test_build.py
+
 # ─── Validate (lint + check format) ─────────────────────────
 validate: lint check-format

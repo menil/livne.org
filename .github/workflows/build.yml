@@ -22,11 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
-      - name: Run lint and format checks
+      - name: Lint, format check, and test
         working-directory: ./cv
         run: |
           nix profile install nixpkgs#devenv
-          devenv shell bash -e -c 'just validate'
+          devenv shell bash -e -c 'just validate && just test'
 
   build:
     if: github.event_name == 'push'
