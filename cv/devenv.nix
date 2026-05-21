@@ -31,6 +31,7 @@
       python-docx
       pytest
       pytest-cov
+      mypy
     ]);
   };
 }

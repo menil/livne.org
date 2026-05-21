@@ -21,5 +21,9 @@ build:
     ./src/build_pdf.py resources/cv.md
     ./src/build_docx.py resources/cv.md
 
-# ─── Validate (lint + check format) ─────────────────────────
-validate: lint check-format
+# ─── Type check ─────────────────────────────────────────────
+typecheck:
+    mypy src/
+
+# ─── Validate (lint + check format + types + tests) ─────────
+validate: lint check-format typecheck test

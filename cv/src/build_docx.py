@@ -24,10 +24,14 @@ def fix_markdown_spacing(md_content: str) -> str:
     return "\n".join(out)
 
 
+def _style_name(paragraph: Paragraph) -> str:
+    return paragraph.style.name if paragraph.style is not None else ""
+
+
 def _format_name_header(paragraph: Paragraph) -> bool:
     if "[REDACTED] [REDACTED]" not in paragraph.text:
         return False
-    if paragraph.style.name not in ["Title", "Heading 1"] and len(paragraph.text) >= 20:
+    if _style_name(paragraph) not in ["Title", "Heading 1"] and len(paragraph.text) >= 20:
         return False
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for run in paragraph.runs:
@@ -123,13 +127,13 @@ def build_styled_docx(input_file: str) -> None:
             found_name = False
             continue
 
-        if paragraph.style.name == "Heading 2":
+        if _style_name(paragraph) == "Heading 2":
             _format_heading2(paragraph)
 
-        if paragraph.style.name == "Heading 3":
+        if _style_name(paragraph) == "Heading 3":
             _format_heading3(paragraph)
 
-        if "|" in paragraph.text and "20" in paragraph.text and paragraph.style.name == "Normal":
+        if "|" in paragraph.text and "20" in paragraph.text and _style_name(paragraph) == "Normal":
             _format_job_title(paragraph)
 
     doc.save(final_output)
