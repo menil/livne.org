@@ -18,7 +18,8 @@ test:
 
 # ─── Build (PDF + DOCX) ─────────────────────────────────────
 build:
-    ./src/pdf/build_pdf.py resources/cv.md
+    ./src/pdf/build_pdf.py resources/cv.md            # recruiter
+    ./src/pdf/build_pdf.py resources/cv.md --public   # public
     ./src/docx/build_docx.py resources/cv.md
     ./src/html/build_html.py resources/cv.md
 

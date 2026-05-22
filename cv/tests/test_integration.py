@@ -57,6 +57,25 @@ def test_build_pdf():
         _check_file(os.path.join(tmp, "[REDACTED]_[REDACTED]_resume.pdf"), b"%PDF", "PDF")
 
 
+def test_build_pdf_public():
+    with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
+        cfg_path = os.path.join(tmp, "config.json")
+        _write_config(cfg_path, {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+        md_path = os.path.join(tmp, "test.md")
+        with open(md_path, "w") as f:
+            f.write(SAMPLE_MD)
+
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        result = subprocess.run(
+            [sys.executable, "src/pdf/build_pdf.py", "--public", md_path],
+            capture_output=True,
+            text=True,
+            cwd=script_dir,
+        )
+        assert result.returncode == 0, f"build_pdf.py --public failed: {result.stderr}"
+        _check_file(os.path.join(tmp, "[REDACTED]_[REDACTED]_resume_public.pdf"), b"%PDF", "PDF-public")
+
+
 def test_build_docx():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         cfg_path = os.path.join(tmp, "config.json")

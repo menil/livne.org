@@ -87,7 +87,7 @@ def build_web_html(md_file: str) -> None:
 
     config_name = config["name"]
     slug = config_name.lower().replace(" ", "_")
-    pdf_url = f"{slug}_resume.pdf"
+    pdf_url = f"{slug}_resume_public.pdf"
     linkedin_url = config.get("linkedin", "")
     email = config.get("email", "")
     full_html = jinja2.Template(tpl_content).render(

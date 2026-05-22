@@ -203,6 +203,17 @@ def test_build_flawless_pdf_with_config(tmp_path):
     assert (tmp_path / "jane_doe_resume.pdf").exists()
 
 
+def test_build_flawless_pdf_public(tmp_path):
+    cfg = {"name": "Jane Doe", "email": "j@e.co", "phone": "555-0000"}
+    _write_json(tmp_path / "config.json", cfg)
+    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }} | {{ phone }}\n\nSummary.")
+    build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"), public=True)
+    assert (tmp_path / "jane_doe_resume_public.pdf").exists()
+    # Phone should be stripped from public version
+    size_public = (tmp_path / "jane_doe_resume_public.pdf").stat().st_size
+    assert size_public > 100
+
+
 # ─── build_styled_docx happy path ─────────────────────────────
 
 
@@ -248,6 +259,7 @@ def test_build_html_happy_path(tmp_path):
     assert "<!DOCTYPE html>" in content
     assert "[REDACTED] [REDACTED]" in content
     assert 'href="mailto:[REDACTED_EMAIL]"' in content
+    assert "[REDACTED]_[REDACTED]_resume_public.pdf" in content
 
 
 def test_build_html_missing_file(tmp_path, capsys):
