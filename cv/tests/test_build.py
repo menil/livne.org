@@ -260,7 +260,7 @@ def test_build_html_happy_path(tmp_path):
     assert "<!DOCTYPE html>" in content
     assert "[REDACTED] [REDACTED]" in content
     assert 'href="mailto:[REDACTED_EMAIL]"' in content
-    assert "[REDACTED]_[REDACTED]_resume_public.pdf" in content
+    assert "[REDACTED]_[REDACTED]_resume.pdf" in content
 
 
 def test_build_html_missing_file(tmp_path, capsys):
