@@ -5,11 +5,14 @@ target-version = "py313"
 quote-style = "double"
 
 [lint]
-select = ["E", "F", "I", "W", "ANN", "C90", "N", "SIM", "PERF", "RUF", "UP", "ARG", "S"]
+select = ["D", "E", "F", "I", "W", "ANN", "C90", "N", "SIM", "PERF", "RUF", "UP", "ARG", "S"]
 
 [lint.per-file-ignores]
-"__init__.py" = ["ANN"]
-"tests/*" = ["ANN", "ARG", "S"]
+"__init__.py" = ["ANN", "D"]
+"tests/*" = ["ANN", "ARG", "D", "S"]
+"src/pdf/*" = ["D"]
+"src/docx/*" = ["D"]
+"src/html/*" = ["D"]
 
 [lint.mccabe]
 max-complexity = 10
