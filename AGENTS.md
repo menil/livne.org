@@ -23,6 +23,7 @@ All development and execution happens inside the devenv shell. Run `devenv shell
   - Title: `type(scope): subject` (max 72 chars)
   - Body lines: max 72 chars
   - Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+  - Scope (optional): single scope only, chars `[a-z0-9._-]` (no commas)
   - Enforced locally via `.githooks/commit-msg` and in CI.
 - Formatting/linting via `just`:
   - `just lint` — ruff (Python), shellcheck (shell)
