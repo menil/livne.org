@@ -91,7 +91,7 @@ jobs:
       - name: Create Cloudflare Pages project (if new)
         continue-on-error: true
         run: |
-          npx wrangler pages project create [REDACTED].org --production-branch main
+          npx wrangler pages project create [REDACTED]-org --production-branch main
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -102,7 +102,7 @@ jobs:
           cp cv/dist/[REDACTED]_[REDACTED]_resume.html deploy/index.html
           cp cv/dist/[REDACTED]_[REDACTED]_resume_public.pdf deploy/
           npx wrangler pages deploy deploy \
-            --project-name=[REDACTED].org \
+            --project-name=[REDACTED]-org \
             --branch="${{ github.head_ref || github.ref_name }}"
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
