@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | [REDACTED] [REDACTED]</title>
+    <style>
+        :root {
+            --dark-navy: #1a252f;
+            --accent-blue: #2980b9;
+            --text-dark: #333333;
+            --text-light: #555555;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+        }
+
+        .error-container {
+            background-color: #ffffff;
+            padding: 60px 70px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: var(--dark-navy);
+            margin: 0;
+            line-height: 1;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: var(--accent-blue);
+            margin: 15px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            color: var(--text-light);
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .action-link {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-link:hover {
+            background-color: #1f6ba0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-color: #ffffff;
+            }
+            .error-container {
+                padding: 40px 20px;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>The system could not locate the requested resource. The link may be broken or the document may have been moved.</p>
+        <a href="/" class="action-link">Back Home</a>
+    </div>
+</body>
+</html>
