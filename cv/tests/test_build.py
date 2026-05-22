@@ -6,6 +6,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
 from docx import Document
+from src.common import config_output_path
 from src.docx import build_docx
 from src.html import build_html
 from src.pdf import build_pdf
@@ -314,3 +315,18 @@ def test_cli_no_args_html():
     )
     assert result.returncode == 1
     assert "Usage:" in result.stdout
+
+
+def test_config_output_path_with_name_no_output_dir():
+    got = config_output_path("/tmp/cv.md", {"name": "Jane Doe"}, "pdf")
+    assert got == "/tmp/jane_doe_resume.pdf"
+
+
+def test_config_output_path_with_name_and_output_dir():
+    got = config_output_path("/tmp/cv.md", {"name": "Jane Doe"}, "pdf", output_dir="/out")
+    assert got == "/out/jane_doe_resume.pdf"
+
+
+def test_config_output_path_no_name_fallback():
+    got = config_output_path("/tmp/cv.md", {"email": "j@e.co"}, "pdf")
+    assert got == "/tmp/cv.pdf"

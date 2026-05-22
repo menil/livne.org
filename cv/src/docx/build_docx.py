@@ -70,14 +70,14 @@ def _format_job_title(paragraph: Paragraph) -> None:
     paragraph.paragraph_format.space_after = Pt(1)
 
 
-def build_styled_docx(input_file: str) -> None:
+def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
     if not os.path.exists(input_file):
         print(f"Error: {input_file} not found.")
         return
 
     config = load_config(input_file)
 
-    final_output = config_output_path(input_file, config, "docx")
+    final_output = config_output_path(input_file, config, "docx", output_dir=output_dir)
     base_output = final_output.replace(".docx", "_base.docx")
 
     print("1. Reading and auto-formatting Markdown...")
@@ -145,4 +145,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python build_docx.py <input.md>")
         sys.exit(1)
-    build_styled_docx(sys.argv[1])
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    _dist_dir = os.path.join(_project_root, "dist")
+    os.makedirs(_dist_dir, exist_ok=True)
+    build_styled_docx(sys.argv[1], output_dir=_dist_dir)

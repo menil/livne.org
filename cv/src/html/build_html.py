@@ -59,7 +59,7 @@ def transform_html(html: str) -> str:
     return html
 
 
-def build_web_html(md_file: str) -> None:
+def build_web_html(md_file: str, output_dir: str | None = None) -> None:
     if not os.path.exists(md_file):
         print(f"Error: {md_file} not found!")
         return
@@ -71,7 +71,7 @@ def build_web_html(md_file: str) -> None:
     config.pop("phone", None)
     raw_md = apply_config(raw_md, config)
 
-    html_file = config_output_path(md_file, config, "html")
+    html_file = config_output_path(md_file, config, "html", output_dir=output_dir)
 
     clean_md = fix_markdown_spacing(raw_md)
     html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
@@ -108,4 +108,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python build_html.py <input.md>")
         sys.exit(1)
-    build_web_html(sys.argv[1])
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    _dist_dir = os.path.join(_project_root, "dist")
+    os.makedirs(_dist_dir, exist_ok=True)
+    build_web_html(sys.argv[1], output_dir=_dist_dir)

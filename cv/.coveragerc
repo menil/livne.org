@@ -5,3 +5,5 @@ omit = */__init__.py
 [report]
 fail_under = 90
 show_missing = true
+exclude_lines =
+    if __name__ == .__main__.:

@@ -18,6 +18,7 @@ test:
 
 # ─── Build (PDF + DOCX) ─────────────────────────────────────
 build:
+    mkdir -p dist
     ./src/pdf/build_pdf.py resources/cv.md            # recruiter
     ./src/pdf/build_pdf.py resources/cv.md --public   # public
     ./src/docx/build_docx.py resources/cv.md

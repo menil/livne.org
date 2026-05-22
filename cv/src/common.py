@@ -45,7 +45,9 @@ def fix_markdown_spacing(md_content: str) -> str:
     return "\n".join(out)
 
 
-def config_output_path(md_file: str, config: dict[str, str], ext: str) -> str:
+def config_output_path(
+    md_file: str, config: dict[str, str], ext: str, output_dir: str | None = None
+) -> str:
     """Derive output path from config name, falling back to the md filename.
 
     When config contains a name, the output is ``{slug}_resume.{ext}``
@@ -55,5 +57,9 @@ def config_output_path(md_file: str, config: dict[str, str], ext: str) -> str:
     name = config.get("name", "")
     if name:
         slug = name.lower().replace(" ", "_")
-        return os.path.join(os.path.dirname(md_file), f"{slug}_resume.{ext}")
-    return md_file.replace(".md", f".{ext}")
+        filename = f"{slug}_resume.{ext}"
+    else:
+        filename = os.path.basename(md_file).replace(".md", f".{ext}")
+    if output_dir is not None:
+        return os.path.join(output_dir, filename)
+    return os.path.join(os.path.dirname(md_file), filename)

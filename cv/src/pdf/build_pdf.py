@@ -58,7 +58,7 @@ def transform_html(html: str) -> str:
     return html
 
 
-def build_flawless_pdf(md_file: str, public: bool = False) -> None:
+def build_flawless_pdf(md_file: str, public: bool = False, output_dir: str | None = None) -> None:
     if not os.path.exists(md_file):
         print(f"Error: {md_file} not found!")
         return
@@ -71,7 +71,7 @@ def build_flawless_pdf(md_file: str, public: bool = False) -> None:
         config.pop("phone", None)
     raw_md = apply_config(raw_md, config)
 
-    pdf_file = config_output_path(md_file, config, "pdf")
+    pdf_file = config_output_path(md_file, config, "pdf", output_dir=output_dir)
     if public:
         pdf_file = pdf_file.replace(".pdf", "_public.pdf")
     clean_md = fix_markdown_spacing(raw_md)
@@ -106,4 +106,7 @@ if __name__ == "__main__":
     if len(args) < 1:
         print("Usage: python build_pdf.py [--public] <input.md>")
         sys.exit(1)
-    build_flawless_pdf(args[0], public=public)
+    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    _dist_dir = os.path.join(_project_root, "dist")
+    os.makedirs(_dist_dir, exist_ok=True)
+    build_flawless_pdf(args[0], public=public, output_dir=_dist_dir)
