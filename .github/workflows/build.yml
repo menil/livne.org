@@ -118,8 +118,5 @@ jobs:
           body: ${{ steps.changelog.outputs.body }}
           files: |
             cv/resources/cv.md
-            cv/dist/[REDACTED]_[REDACTED]_resume.pdf
-            cv/dist/[REDACTED]_[REDACTED]_resume_public.pdf
-            cv/dist/[REDACTED]_[REDACTED]_resume.docx
-            cv/dist/[REDACTED]_[REDACTED]_resume.html
+            cv/dist/*
           target_commitish: ${{ github.sha }}
