@@ -103,7 +103,8 @@ jobs:
           mkdir -p deploy
           cp cv/dist/[REDACTED]_[REDACTED]_resume.html deploy/index.html
           cp cv/dist/[REDACTED]_[REDACTED]_resume_public.pdf deploy/[REDACTED]_[REDACTED]_resume.pdf
-          cp html/404.html deploy/404.html
+          cp static/404.html deploy/404.html
+          cp static/favicon.svg deploy/favicon.svg
           npx wrangler pages deploy deploy \
             --project-name=[REDACTED]-org \
             --branch="${{ github.head_ref || github.ref_name }}"
