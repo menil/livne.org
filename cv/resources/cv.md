@@ -17,7 +17,7 @@ Principal Software Engineer and Technical Architect specializing in highly scala
 * Fostered a culture of engineering excellence by mentoring cross-functional teams, leading technical training sessions, and establishing best practices for system architecture
 
 **Senior Software Engineer, Data** | 2019-2020
-* Rebuilt the core Whitepages data asset from scratch following a corporate spin-off, driving the implementation of a highly scalable data ingestion pipeline using Scala, Databricks, Elasticsearch and Prefect to power the company's central search product
+* Rebuilt the core Whitepages data asset from scratch following a corporate spin-off, driving the implementation of a highly scalable data ingestion pipeline using Scala, Apache Spark, Databricks, Elasticsearch and Prefect to power the company's central search product
 * Spearheaded the search result optimization initiative across the organization
 * Engineered six-figure cost savings in the backend systems by optimizing Elasticsearch infrastructure, allowing the company to use in-house solutions and bypass an expensive managed-hosting migration
 
