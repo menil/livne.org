@@ -68,6 +68,7 @@ def build_web_html(md_file: str, output_dir: str | None = None) -> None:
         raw_md = f.read()
 
     config = load_config(md_file)
+    linkedin_url = config.get("linkedin", "")
     config.pop("phone", None)
     config.pop("linkedin", None)
     raw_md = apply_config(raw_md, config)
@@ -89,7 +90,6 @@ def build_web_html(md_file: str, output_dir: str | None = None) -> None:
     config_name = config["name"]
     slug = config_name.lower().replace(" ", "_")
     pdf_url = f"{slug}_resume.pdf"
-    linkedin_url = config.get("linkedin", "")
     email = config.get("email", "")
     full_html = jinja2.Template(tpl_content).render(
         title=f"{config_name} - Principal Software Engineer",
