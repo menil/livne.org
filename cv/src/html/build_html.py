@@ -69,6 +69,7 @@ def build_web_html(md_file: str, output_dir: str | None = None) -> None:
 
     config = load_config(md_file)
     config.pop("phone", None)
+    config.pop("linkedin", None)
     raw_md = apply_config(raw_md, config)
 
     html_file = config_output_path(md_file, config, "html", output_dir=output_dir)

@@ -69,6 +69,7 @@ def build_flawless_pdf(md_file: str, public: bool = False, output_dir: str | Non
     config = load_config(md_file)
     if public:
         config.pop("phone", None)
+        config.pop("linkedin", None)
     raw_md = apply_config(raw_md, config)
 
     pdf_file = config_output_path(md_file, config, "pdf", output_dir=output_dir)
