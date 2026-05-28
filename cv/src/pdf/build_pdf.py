@@ -55,6 +55,16 @@ def transform_html(html: str) -> str:
         html,
         flags=re.DOTALL,
     )
+    html = re.sub(
+        r"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})",
+        r'<a href="mailto:\1">\1</a>',
+        html,
+    )
+    html = re.sub(
+        r"(https?://[^\s<]+)",
+        lambda m: f'<a href="{m.group(1)}">{re.sub(r"https?://(?:www\.)?", "", m.group(1))}</a>',
+        html,
+    )
     return html
 
 
