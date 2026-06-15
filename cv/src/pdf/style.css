@@ -34,7 +34,7 @@ h1 + p {
 h1 + p + p {
     font-size: 10.5pt;
     margin-bottom: 18px;
-    text-align: justify;
+    text-align: left;
     padding: 0 5px;
 }
 
@@ -101,7 +101,7 @@ ul {
 
 li {
     margin-bottom: 5px;
-    text-align: justify;
+    text-align: left;
 }
 
 .skills-table {
@@ -125,7 +125,7 @@ li {
 .skill-list {
     width: 75%;
     color: #444444;
-    text-align: justify;
+    text-align: left;
 }
 
 .early-career td {
