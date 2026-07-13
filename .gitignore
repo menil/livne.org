@@ -9,3 +9,4 @@ htmlcov/
 **/resources/*.html
 dist/
 .beads/
+.env.local
