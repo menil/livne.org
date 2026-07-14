@@ -1,6 +1,6 @@
-import os
 import subprocess
 import sys
+from pathlib import Path
 
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
@@ -10,25 +10,9 @@ from src.common import ENV_KEYS, config_output_path
 from src.docx import build_docx
 from src.html import build_html
 from src.pdf import build_pdf
+from tests.conftest import DEFAULT_CONFIG, DUMMY_EMAIL, DUMMY_NAME, SAMPLE_MD
 
-SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-SAMPLE_MD = """\
-# [REDACTED] [REDACTED]
-
-[REDACTED_EMAIL]
-
-Summary line here.
-
-## Experience
-
-### Company Name
-*Role description here.*
-
-**Engineer | 2020-2025**
-
-- Bullet one
-"""
+SCRIPT_DIR = Path(__file__).resolve().parent.parent
 
 
 def _add_run(paragraph, text):
@@ -39,23 +23,20 @@ def _add_run(paragraph, text):
 # ─── _format_name_header ──────────────────────────────────────
 
 
-_NAME = "[REDACTED] [REDACTED]"
-
-
 def test_name_header_title_style():
     doc = Document()
-    p = doc.add_paragraph("[REDACTED] [REDACTED]")
+    p = doc.add_paragraph(DUMMY_NAME)
     p.style = doc.styles["Title"]
-    _add_run(p, "[REDACTED] [REDACTED]")
-    assert build_docx._format_name_header(p, _NAME)
+    _add_run(p, DUMMY_NAME)
+    assert build_docx._format_name_header(p, DUMMY_NAME)
 
 
 def test_name_header_heading1_style():
     doc = Document()
-    p = doc.add_paragraph("[REDACTED] [REDACTED] - CEO")
+    p = doc.add_paragraph(f"{DUMMY_NAME} - CEO")
     p.style = doc.styles["Heading 1"]
-    _add_run(p, "[REDACTED] [REDACTED] - CEO")
-    assert build_docx._format_name_header(p, _NAME)
+    _add_run(p, f"{DUMMY_NAME} - CEO")
+    assert build_docx._format_name_header(p, DUMMY_NAME)
 
 
 def test_name_header_no_name():
@@ -63,30 +44,30 @@ def test_name_header_no_name():
     p = doc.add_paragraph("Not My Name")
     p.style = doc.styles["Title"]
     _add_run(p, "Not My Name")
-    assert not build_docx._format_name_header(p, _NAME)
+    assert not build_docx._format_name_header(p, DUMMY_NAME)
 
 
 def test_name_header_wrong_style_and_long():
     doc = Document()
-    p = doc.add_paragraph("[REDACTED] [REDACTED] - Chief Executive Officer")
+    p = doc.add_paragraph(f"{DUMMY_NAME} - Chief Executive Officer")
     p.style = doc.styles["Heading 2"]
-    _add_run(p, "[REDACTED] [REDACTED] - Chief Executive Officer")
-    assert not build_docx._format_name_header(p, _NAME)
+    _add_run(p, f"{DUMMY_NAME} - Chief Executive Officer")
+    assert not build_docx._format_name_header(p, DUMMY_NAME)
 
 
 def test_name_header_wrong_style_but_short():
     doc = Document()
-    p = doc.add_paragraph("[REDACTED] [REDACTED]")
+    p = doc.add_paragraph(DUMMY_NAME)
     p.style = doc.styles["Normal"]
-    assert build_docx._format_name_header(p, _NAME)
+    assert build_docx._format_name_header(p, DUMMY_NAME)
 
 
 def test_name_header_formats_correctly():
     doc = Document()
-    p = doc.add_paragraph("[REDACTED] [REDACTED]")
+    p = doc.add_paragraph(DUMMY_NAME)
     p.style = doc.styles["Title"]
-    _add_run(p, "[REDACTED] [REDACTED]")
-    assert build_docx._format_name_header(p, _NAME)
+    _add_run(p, DUMMY_NAME)
+    assert build_docx._format_name_header(p, DUMMY_NAME)
     assert p.alignment == WD_ALIGN_PARAGRAPH.CENTER
     assert p.runs[0].font.size == Pt(26)
     assert p.runs[0].font.bold
@@ -173,23 +154,21 @@ _REVERSE_KEYS = {v: k for k, v in ENV_KEYS.items()}
 
 def _write_env(path, data):
     lines = [f"{_REVERSE_KEYS[k]}={v}" for k, v in data.items() if k in _REVERSE_KEYS]
-    with open(path, "w") as f:
-        f.write("\n".join(lines) + "\n")
+    path.write_text("\n".join(lines) + "\n")
 
 
 # ─── build_flawless_pdf happy path ────────────────────────────
 
 
 def test_build_flawless_pdf_happy_path(tmp_path):
-    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_pdf.build_flawless_pdf(str(md_file))
-    pdf_file = tmp_path / "[REDACTED]_[REDACTED]_resume.pdf"
+    pdf_file = tmp_path / "john_doe_resume.pdf"
     assert pdf_file.exists()
     assert pdf_file.stat().st_size > 100
-    with open(pdf_file, "rb") as f:
-        assert f.read(4) == b"%PDF"
+    assert pdf_file.read_bytes()[:4] == b"%PDF"
 
 
 def test_build_flawless_pdf_missing_file(tmp_path, capsys):
@@ -212,7 +191,6 @@ def test_build_flawless_pdf_public(tmp_path):
     (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }} | {{ phone }}\n\nSummary.")
     build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"), public=True)
     assert (tmp_path / "jane_doe_resume_public.pdf").exists()
-    # Phone should be stripped from public version
     size_public = (tmp_path / "jane_doe_resume_public.pdf").stat().st_size
     assert size_public > 100
 
@@ -221,15 +199,14 @@ def test_build_flawless_pdf_public(tmp_path):
 
 
 def test_build_styled_docx_happy_path(tmp_path):
-    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_docx.build_styled_docx(str(md_file))
-    docx_file = tmp_path / "[REDACTED]_[REDACTED]_resume.docx"
+    docx_file = tmp_path / "john_doe_resume.docx"
     assert docx_file.exists()
     assert docx_file.stat().st_size > 100
-    with open(docx_file, "rb") as f:
-        assert f.read(2) == b"PK"
+    assert docx_file.read_bytes()[:2] == b"PK"
 
 
 def test_build_styled_docx_missing_file(tmp_path, capsys):
@@ -250,19 +227,18 @@ def test_build_styled_docx_with_config(tmp_path):
 
 
 def test_build_html_happy_path(tmp_path):
-    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_html.build_web_html(str(md_file))
-    html_file = tmp_path / "[REDACTED]_[REDACTED]_resume.html"
+    html_file = tmp_path / "john_doe_resume.html"
     assert html_file.exists()
     assert html_file.stat().st_size > 100
-    with open(html_file) as f:
-        content = f.read()
+    content = html_file.read_text()
     assert "<!DOCTYPE html>" in content
-    assert "[REDACTED] [REDACTED]" in content
-    assert 'href="mailto:[REDACTED_EMAIL]"' in content
-    assert "[REDACTED]_[REDACTED]_resume.pdf" in content
+    assert DUMMY_NAME in content
+    assert f'href="mailto:{DUMMY_EMAIL}"' in content
+    assert "john_doe_resume.pdf" in content
 
 
 def test_build_html_missing_file(tmp_path, capsys):
@@ -278,8 +254,7 @@ def test_build_html_with_config(tmp_path):
     build_html.build_web_html(str(tmp_path / "cv.md"))
     html_file = tmp_path / "jane_doe_resume.html"
     assert html_file.exists()
-    with open(html_file) as f:
-        content = f.read()
+    content = html_file.read_text()
     assert "Jane Doe" in content
 
 
