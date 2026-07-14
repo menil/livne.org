@@ -8,11 +8,6 @@ from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from docx import Document
-
-if __name__ == "__main__":
-    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    sys.path.insert(0, _project_root)
-
 from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
 
 

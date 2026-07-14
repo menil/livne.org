@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 """Render a Markdown template with PII config values."""
 
-import os
 import sys
-
-if __name__ == "__main__":
-    _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    sys.path.insert(0, _project_root)
 
 from src.common import apply_config, load_config
 
