@@ -1,5 +1,5 @@
 # {{ name }}
-[REDACTED_LOCATION], WA | {{ email }}{% if phone %} | {{ phone }}{% endif %}{% if linkedin %} | {{ linkedin }}{% endif %}
+{{ location }} | {{ email }}{% if phone %} | {{ phone }}{% endif %}{% if linkedin %} | {{ linkedin }}{% endif %}
 
 Principal Software Engineer and Technical Architect specializing in highly scalable backend systems, complex data pipelines, and infrastructure optimization. Proven track record of driving business value through cross-functional collaboration, partnering directly with business departments to engineer solutions that optimize workflows, scale revenue, and generate massive cost savings. Led the foundational architecture from an early-stage startup to a successful exit.
 
