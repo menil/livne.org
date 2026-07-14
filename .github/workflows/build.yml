@@ -143,6 +143,5 @@ jobs:
           name: "CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}"
           body: ${{ steps.changelog.outputs.body }}
           files: |
-            cv/resources/cv.md
             cv/dist/*
           target_commitish: ${{ github.sha }}
