@@ -1,22 +1,48 @@
 #!/usr/bin/env python3
 """Shared utilities for CV resume builders (PDF, DOCX, HTML)."""
 
-import json
 import os
 
 import jinja2
+from dotenv import dotenv_values
+
+ENV_KEYS = {
+    "RESUME_NAME": "name",
+    "RESUME_EMAIL": "email",
+    "RESUME_PHONE": "phone",
+    "RESUME_LINKEDIN": "linkedin",
+    "RESUME_LOCATION": "location",
+}
+
+
+def _find_env_file(md_dir: str) -> str | None:
+    """Look for .env.local in *md_dir* or its immediate parent."""
+    md_dir = os.path.abspath(md_dir)
+    for candidate in (md_dir, os.path.dirname(md_dir)):
+        path = os.path.join(candidate, ".env.local")
+        if os.path.isfile(path):
+            return path
+    return None
 
 
 def load_config(md_file: str) -> dict[str, str]:
-    """Load config.json from the same directory as the markdown file.
+    """Load PII config from .env.local or environment variables.
 
-    Returns an empty dict if no config.json exists.
+    Priority:
+      1. .env.local in the markdown file's directory or its parent
+      2. Process environment variables (for CI / GitHub Secrets)
+
+    Returns a dict with keys: name, email, phone, linkedin, location.
     """
-    config_path = os.path.join(os.path.dirname(md_file), "config.json")
-    if os.path.exists(config_path):
-        with open(config_path, encoding="utf-8") as f:
-            return json.load(f)  # type: ignore[no-any-return]
-    return {}
+    env_file = _find_env_file(os.path.dirname(md_file))
+    file_vars = dotenv_values(env_file) if env_file else {}
+
+    config: dict[str, str] = {}
+    for env_key, dict_key in ENV_KEYS.items():
+        value = file_vars.get(env_key) or os.environ.get(env_key)
+        if value:
+            config[dict_key] = value
+    return config
 
 
 def apply_config(md_content: str, config: dict[str, str]) -> str:

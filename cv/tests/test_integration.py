@@ -1,4 +1,3 @@
-import json
 import os
 import subprocess
 import sys
@@ -33,9 +32,19 @@ def _check_file(path: str, magic: bytes, label: str) -> None:
     assert header == magic, f"{label} wrong magic bytes: {header!r}"
 
 
-def _write_config(path, data):
+_ENV_KEYS = {
+    "name": "RESUME_NAME",
+    "email": "RESUME_EMAIL",
+    "phone": "RESUME_PHONE",
+    "linkedin": "RESUME_LINKEDIN",
+    "location": "RESUME_LOCATION",
+}
+
+
+def _write_env(path, data):
+    lines = [f"{_ENV_KEYS[k]}={v}" for k, v in data.items() if k in _ENV_KEYS]
     with open(path, "w") as f:
-        json.dump(data, f)
+        f.write("\n".join(lines) + "\n")
 
 
 SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,7 +56,7 @@ CONFIG = {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"}
 def test_build_pdf():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         md_path = os.path.join(tmp, "test.md")
-        _write_config(os.path.join(tmp, "config.json"), CONFIG)
+        _write_env(os.path.join(tmp, ".env.local"), CONFIG)
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
         result = subprocess.run(
@@ -64,7 +73,7 @@ def test_build_pdf():
 def test_build_pdf_public():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         md_path = os.path.join(tmp, "test.md")
-        _write_config(os.path.join(tmp, "config.json"), CONFIG)
+        _write_env(os.path.join(tmp, ".env.local"), CONFIG)
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
         result = subprocess.run(
@@ -85,7 +94,7 @@ def test_build_pdf_public():
 def test_build_docx():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         md_path = os.path.join(tmp, "test.md")
-        _write_config(os.path.join(tmp, "config.json"), CONFIG)
+        _write_env(os.path.join(tmp, ".env.local"), CONFIG)
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
         result = subprocess.run(
@@ -102,7 +111,7 @@ def test_build_docx():
 def test_build_html():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         md_path = os.path.join(tmp, "test.md")
-        _write_config(os.path.join(tmp, "config.json"), CONFIG)
+        _write_env(os.path.join(tmp, ".env.local"), CONFIG)
         with open(md_path, "w") as f:
             f.write(SAMPLE_MD)
         result = subprocess.run(

@@ -6,7 +6,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
 from docx import Document
-from src.common import config_output_path
+from src.common import ENV_KEYS, config_output_path
 from src.docx import build_docx
 from src.html import build_html
 from src.pdf import build_pdf
@@ -168,18 +168,20 @@ def test_job_title_styling():
 # ─── helpers ────────────────────────────────────────────────
 
 
-def _write_json(path, data):
-    import json
+_REVERSE_KEYS = {v: k for k, v in ENV_KEYS.items()}
 
+
+def _write_env(path, data):
+    lines = [f"{_REVERSE_KEYS[k]}={v}" for k, v in data.items() if k in _REVERSE_KEYS]
     with open(path, "w") as f:
-        json.dump(data, f)
+        f.write("\n".join(lines) + "\n")
 
 
 # ─── build_flawless_pdf happy path ────────────────────────────
 
 
 def test_build_flawless_pdf_happy_path(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_pdf.build_flawless_pdf(str(md_file))
@@ -198,7 +200,7 @@ def test_build_flawless_pdf_missing_file(tmp_path, capsys):
 
 
 def test_build_flawless_pdf_with_config(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
     (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
     build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"))
     assert (tmp_path / "jane_doe_resume.pdf").exists()
@@ -206,7 +208,7 @@ def test_build_flawless_pdf_with_config(tmp_path):
 
 def test_build_flawless_pdf_public(tmp_path):
     cfg = {"name": "Jane Doe", "email": "j@e.co", "phone": "555-0000"}
-    _write_json(tmp_path / "config.json", cfg)
+    _write_env(tmp_path / ".env.local", cfg)
     (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }} | {{ phone }}\n\nSummary.")
     build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"), public=True)
     assert (tmp_path / "jane_doe_resume_public.pdf").exists()
@@ -219,7 +221,7 @@ def test_build_flawless_pdf_public(tmp_path):
 
 
 def test_build_styled_docx_happy_path(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_docx.build_styled_docx(str(md_file))
@@ -238,7 +240,7 @@ def test_build_styled_docx_missing_file(tmp_path, capsys):
 
 
 def test_build_styled_docx_with_config(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
     (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
     build_docx.build_styled_docx(str(tmp_path / "cv.md"))
     assert (tmp_path / "jane_doe_resume.docx").exists()
@@ -248,7 +250,7 @@ def test_build_styled_docx_with_config(tmp_path):
 
 
 def test_build_html_happy_path(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
+    _write_env(tmp_path / ".env.local", {"name": "[REDACTED] [REDACTED]", "email": "[REDACTED_EMAIL]"})
     md_file = tmp_path / "test.md"
     md_file.write_text(SAMPLE_MD)
     build_html.build_web_html(str(md_file))
@@ -271,7 +273,7 @@ def test_build_html_missing_file(tmp_path, capsys):
 
 
 def test_build_html_with_config(tmp_path):
-    _write_json(tmp_path / "config.json", {"name": "Jane Doe", "email": "j@e.co"})
+    _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
     (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
     build_html.build_web_html(str(tmp_path / "cv.md"))
     html_file = tmp_path / "jane_doe_resume.html"

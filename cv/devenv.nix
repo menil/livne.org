@@ -30,6 +30,7 @@
       jinja2
       pypandoc
       python-docx
+      python-dotenv
       pytest
       pytest-cov
       mypy
