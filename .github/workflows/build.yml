@@ -29,9 +29,7 @@ jobs:
           name: devenv
       - uses: actions/cache@v6
         with:
-          path: |
-            cv/.devenv
-            ~/.cache/nix
+          path: cv/.devenv
           key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock') }}
       - name: Build devenv shell (cached)
         working-directory: ./cv
@@ -75,9 +73,7 @@ jobs:
 
       - uses: actions/cache@v6
         with:
-          path: |
-            cv/.devenv
-            ~/.cache/nix
+          path: cv/.devenv
           key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock') }}
 
       - name: Build devenv shell (cached)
