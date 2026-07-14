@@ -85,6 +85,12 @@ jobs:
       - name: Generate PDF and DOCX
         working-directory: ./cv
         run: devenv shell bash -e -c 'just build'
+        env:
+          RESUME_NAME: ${{ secrets.RESUME_NAME }}
+          RESUME_EMAIL: ${{ secrets.RESUME_EMAIL }}
+          RESUME_PHONE: ${{ secrets.RESUME_PHONE }}
+          RESUME_LINKEDIN: ${{ secrets.RESUME_LINKEDIN }}
+          RESUME_LOCATION: ${{ secrets.RESUME_LOCATION }}
 
       - name: Create Cloudflare Pages project (if new)
         continue-on-error: true
