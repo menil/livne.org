@@ -111,7 +111,8 @@ jobs:
           [ ${#files[@]} -eq 1 ] || { echo "Expected 1 public PDF, found ${#files[@]}"; exit 1; }
           PUBLIC_PDF="${files[0]}"
           cp "$HTML_FILE" deploy/index.html
-          cp "$PUBLIC_PDF" deploy/"${PUBLIC_PDF%_public.pdf}_resume.pdf"
+          PUBLIC_PDF_NAME="${PUBLIC_PDF##*/}"
+          cp "$PUBLIC_PDF" deploy/"${PUBLIC_PDF_NAME/_public.pdf/.pdf}"
           cp static/404.html deploy/404.html
           cp static/favicon.svg deploy/favicon.svg
           npx wrangler pages deploy deploy \
