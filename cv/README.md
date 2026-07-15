@@ -1,11 +1,11 @@
 # Resume PDF & DOCX Builder
 
-[![CI](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml/badge.svg)](https://github.com/[REDACTED]l/[REDACTED].org/actions/workflows/build.yml)
+[![CI](https://github.com/menil/livne.org/actions/workflows/build.yml/badge.svg)](https://github.com/menil/livne.org/actions/workflows/build.yml)
 [![Python](https://img.shields.io/badge/python-3.13-blue?logo=python)](https://www.python.org)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000)](https://docs.astral.sh/ruff)
 [![Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)](.coveragerc)
-[![License](https://img.shields.io/github/license/[REDACTED]l/[REDACTED].org)](../LICENSE)
-[![Last commit](https://img.shields.io/github/last-commit/[REDACTED]l/[REDACTED].org)](https://github.com/[REDACTED]l/[REDACTED].org/commits/main)
+[![License](https://img.shields.io/github/license/menil/livne.org)](../LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/menil/livne.org)](https://github.com/menil/livne.org/commits/main)
 
 Builds a polished PDF and DOCX resume from Markdown using WeasyPrint and Pandoc.
 
