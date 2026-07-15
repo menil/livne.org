@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run PR Review Action
-        uses: [REDACTED]l/pr-code-review-action@main
+        uses: menil/pr-code-review-action@main
         with:
           openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
           openrouter_model: ${{ vars.OPENROUTER_MODEL || 'openrouter/free' }}

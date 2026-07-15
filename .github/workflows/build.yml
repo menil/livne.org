@@ -95,7 +95,7 @@ jobs:
       - name: Create Cloudflare Pages project (if new)
         continue-on-error: true
         run: |
-          npx wrangler pages project create [REDACTED]-org --production-branch main
+          npx wrangler pages project create livne-org --production-branch main
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -116,7 +116,7 @@ jobs:
           cp static/404.html deploy/404.html
           cp static/favicon.svg deploy/favicon.svg
           npx wrangler pages deploy deploy \
-            --project-name=[REDACTED]-org \
+            --project-name=livne-org \
             --branch="${{ github.head_ref || github.ref_name }}"
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
