@@ -33,3 +33,9 @@ All development and execution happens inside the devenv shell under the `cv/` di
   - `just test` — pytest unit and integration tests
   - `just validate` — lint + check-format + typecheck + test
   - Pre-commit hooks and CI all use the same tools/configs.
+
+## PII & Environment Configuration
+
+- **PII Redaction**: Do not write real Personally Identifiable Information (PII) like names, phone numbers, personal emails, physical addresses, or LinkedIn handles into source markdown files (e.g. `cv.md` or templates).
+- **Configuration & Placeholders**: Always use Jinja2 placeholders (e.g. `{{ name }}`, `{{ email }}`) in `cv.md` and load values dynamically using the `.env.local` file (configured via `cv/.env.local` or environment variables).
+- **Validation**: The repository enforces a local pre-commit hook `.githooks/pre-commit` to block staged commits containing raw email addresses, phone numbers, or LinkedIn profile URLs. Always ensure changes are compliant before committing.
