@@ -17,13 +17,26 @@ Builds a polished PDF and DOCX resume from Markdown using WeasyPrint and Pandoc.
 
 ## Setup
 
-```sh
-# Enter the dev environment
-devenv shell
+1. **Enter the dev environment**:
+   ```sh
+   devenv shell
 
-# Or if you have direnv:
-direnv allow
-```
+   # Or if you have direnv:
+   direnv allow
+   ```
+
+2. **Configure Personal Details (PII)**:
+   To keep your resume source files generic and safe for public repositories, personal details are injected via environment variables:
+   * **Locally**: Copy the example configuration to `.env.local` and add your details:
+     ```sh
+     cp .env.example .env.local
+     ```
+   * **In CI / CD (GitHub Actions)**: Add the following variables to your repository's **GitHub Actions Secrets**:
+     * `RESUME_NAME`
+     * `RESUME_EMAIL`
+     * `RESUME_PHONE`
+     * `RESUME_LINKEDIN`
+     * `RESUME_LOCATION`
 
 ## Usage
 
