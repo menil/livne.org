@@ -92,10 +92,13 @@ jobs:
           RESUME_LINKEDIN: ${{ secrets.RESUME_LINKEDIN }}
           RESUME_LOCATION: ${{ secrets.RESUME_LOCATION }}
 
+      - name: Install Wrangler globally
+        run: npm install -g wrangler
+
       - name: Create Cloudflare Pages project (if new)
         continue-on-error: true
         run: |
-          npx wrangler pages project create livne-org --production-branch main
+          wrangler pages project create livne-org --production-branch main
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -115,7 +118,7 @@ jobs:
           cp "$PUBLIC_PDF" deploy/"${PUBLIC_PDF_NAME/_public.pdf/.pdf}"
           cp static/404.html deploy/404.html
           cp static/favicon.svg deploy/favicon.svg
-          npx wrangler pages deploy deploy \
+          wrangler pages deploy deploy \
             --project-name=livne-org \
             --branch="${{ github.head_ref || github.ref_name }}"
         env:
@@ -125,6 +128,23 @@ jobs:
       - name: Generate date tag
         id: date
         run: echo "short=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT" && echo "long=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Resumes to Cloudflare R2
+        run: |
+          shopt -s nullglob
+          TAG="${{ steps.date.outputs.short }}-${{ github.run_number }}"
+          for file in cv/dist/*_resume.* cv/dist/cv.md; do
+            if [ -f "$file" ]; then
+              filename="${file##*/}"
+              # Upload versioned release subfolder and latest stable folder in parallel
+              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/releases/$TAG/$filename" --file="$file" &
+              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/latest/$filename" --file="$file" &
+            fi
+          done
+          wait
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Generate changelog
         id: changelog
@@ -151,5 +171,6 @@ jobs:
           name: "CV build #${{ github.run_number }} - ${{ steps.date.outputs.long }}"
           body: ${{ steps.changelog.outputs.body }}
           files: |
-            cv/dist/*
+            cv/dist/*_public.pdf
+            cv/dist/*_resume.html
           target_commitish: ${{ github.sha }}
