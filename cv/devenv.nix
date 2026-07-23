@@ -39,6 +39,7 @@
       pytest
       pytest-cov
       mypy
+      pyyaml
     ]);
   };
 }

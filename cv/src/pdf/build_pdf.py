@@ -3,15 +3,17 @@ import os
 import re
 import sys
 
-import markdown
+import jinja2
 import weasyprint
+import yaml
 
-from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+from src.common import apply_config, config_output_path, load_config
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def transform_html(html: str) -> str:
+    """Legacy regex transformer (retained for backward compatibility and unit tests)."""
     html = re.sub(
         r"<h3>(.*?)</h3>\s*<p><em>(.*?)</em></p>",
         lambda m: (
@@ -64,31 +66,46 @@ def transform_html(html: str) -> str:
     return html
 
 
-def build_flawless_pdf(md_file: str, public: bool = False, output_dir: str | None = None) -> None:
-    if not os.path.exists(md_file):
-        print(f"Error: {md_file} not found!")
+def build_flawless_pdf(yaml_file: str, public: bool = False, output_dir: str | None = None) -> None:
+    if not os.path.exists(yaml_file):
+        print(f"Error: {yaml_file} not found!")
         return
 
-    with open(md_file, encoding="utf-8") as f:
-        raw_md = f.read()
+    # 1. Load PII config
+    config = load_config(yaml_file)
 
-    config = load_config(md_file)
-    if public:
-        config.pop("phone", None)
-    raw_md = apply_config(raw_md, config)
+    # 2. Read and parse YAML
+    with open(yaml_file, encoding="utf-8") as f:
+        yaml_content = f.read()
+    rendered_yaml = apply_config(yaml_content, config)
+    data = yaml.safe_load(rendered_yaml)
 
-    pdf_file = config_output_path(md_file, config, "pdf", output_dir=output_dir)
+    # 3. Derive output path
+    pdf_file = config_output_path(yaml_file, config, "pdf", output_dir=output_dir)
     if public:
         pdf_file = pdf_file.replace(".pdf", "_public.pdf")
-    clean_md = fix_markdown_spacing(raw_md)
 
-    html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
-    html_body = transform_html(html_body)
+    # 4. Prepare data for body rendering (public version hides phone)
+    body_data = dict(data)
+    body_basics = dict(data["basics"])
+    if public:
+        body_basics.pop("phone", None)
+    body_data["basics"] = body_basics
+    body_data["is_pdf"] = True
 
+    # 5. Render html_body from body.html template
+    project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
+    body_tpl_path = os.path.join(project_root, "src", "body.html")
+    with open(body_tpl_path, encoding="utf-8") as f:
+        body_tpl = f.read()
+    html_body = jinja2.Template(body_tpl).render(**body_data)
+
+    # 6. Read PDF stylesheet
     css_path = os.path.join(_SCRIPT_DIR, "style.css")
     with open(css_path, encoding="utf-8") as f:
         css_content = f.read()
 
+    # 7. Render full HTML wrapper
     full_html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -110,7 +127,7 @@ if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if a != "--public"]
     public = "--public" in sys.argv[1:]
     if len(args) < 1:
-        print("Usage: python build_pdf.py [--public] <input.md>")
+        print("Usage: python build_pdf.py [--public] <input.yaml>")
         sys.exit(1)
     _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     _dist_dir = os.path.join(_project_root, "dist")

@@ -4,14 +4,15 @@ import re
 import sys
 
 import jinja2
-import markdown
+import yaml
 
-from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+from src.common import apply_config, config_output_path, load_config
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def transform_html(html: str) -> str:
+    """Legacy regex transformer (retained for backward compatibility and unit tests)."""
     html = re.sub(
         r"<h3>(.*?)</h3>\s*<p><em>(.*?)</em></p>",
         r'<div class="company-header">'
@@ -55,26 +56,41 @@ def transform_html(html: str) -> str:
     return html
 
 
-def build_web_html(md_file: str, output_dir: str | None = None) -> None:
-    if not os.path.exists(md_file):
-        print(f"Error: {md_file} not found!")
+def build_web_html(yaml_file: str, output_dir: str | None = None) -> None:
+    if not os.path.exists(yaml_file):
+        print(f"Error: {yaml_file} not found!")
         return
 
-    with open(md_file, encoding="utf-8") as f:
-        raw_md = f.read()
-
-    config = load_config(md_file)
+    # 1. Load PII config
+    config = load_config(yaml_file)
     linkedin_url = config.get("linkedin", "")
-    config.pop("phone", None)
-    config.pop("linkedin", None)
-    raw_md = apply_config(raw_md, config)
+    email = config.get("email", "")
 
-    html_file = config_output_path(md_file, config, "html", output_dir=output_dir)
+    # 2. Read and parse YAML
+    with open(yaml_file, encoding="utf-8") as f:
+        yaml_content = f.read()
+    rendered_yaml = apply_config(yaml_content, config)
+    data = yaml.safe_load(rendered_yaml)
 
-    clean_md = fix_markdown_spacing(raw_md)
-    html_body = markdown.markdown(clean_md, extensions=["tables", "sane_lists"])
-    html_body = transform_html(html_body)
+    # 3. Derive output path using name in config
+    html_file = config_output_path(yaml_file, config, "html", output_dir=output_dir)
 
+    # 4. Prepare data for body rendering (web version hides phone and linkedin in header)
+    body_data = dict(data)
+    body_basics = dict(data["basics"])
+    body_basics.pop("phone", None)
+    body_basics.pop("linkedin", None)
+    body_data["basics"] = body_basics
+    body_data["is_pdf"] = False
+
+    # 5. Render html_body from body.html template
+    project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
+    body_tpl_path = os.path.join(project_root, "src", "body.html")
+    with open(body_tpl_path, encoding="utf-8") as f:
+        body_tpl = f.read()
+    html_body = jinja2.Template(body_tpl).render(**body_data)
+
+    # 6. Read CSS and outer template
     css_path = os.path.join(_SCRIPT_DIR, "style-web.css")
     with open(css_path, encoding="utf-8") as f:
         css_content = f.read()
@@ -83,10 +99,11 @@ def build_web_html(md_file: str, output_dir: str | None = None) -> None:
     with open(tpl_path, encoding="utf-8") as f:
         tpl_content = f.read()
 
-    config_name = config["name"]
+    config_name = config.get("name", data["basics"].get("name", ""))
     slug = config_name.lower().replace(" ", "_")
     pdf_url = f"{slug}_resume.pdf"
-    email = config.get("email", "")
+
+    # 7. Render full HTML
     full_html = jinja2.Template(tpl_content).render(
         title=f"{config_name} - Principal Software Engineer",
         css_content=css_content,
@@ -103,7 +120,7 @@ def build_web_html(md_file: str, output_dir: str | None = None) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python build_html.py <input.md>")
+        print("Usage: python build_html.py <input.yaml>")
         sys.exit(1)
     _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     _dist_dir = os.path.join(_project_root, "dist")

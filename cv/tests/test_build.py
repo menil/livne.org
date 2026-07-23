@@ -9,8 +9,9 @@ from docx import Document
 from src.common import ENV_KEYS, config_output_path
 from src.docx import build_docx
 from src.html import build_html
+from src.md.render_md import render_markdown
 from src.pdf import build_pdf
-from tests.conftest import DEFAULT_CONFIG, DUMMY_EMAIL, DUMMY_NAME, SAMPLE_MD
+from tests.conftest import DEFAULT_CONFIG, DUMMY_EMAIL, DUMMY_NAME, SAMPLE_YAML
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 
@@ -157,14 +158,44 @@ def _write_env(path, data):
     path.write_text("\n".join(lines) + "\n")
 
 
-# ─── build_flawless_pdf happy path ────────────────────────────
+def _write_minimal_yaml(path):
+    path.write_text(
+        "basics:\n"
+        "  name: '{{ name }}'\n"
+        "  email: '{{ email }}'\n"
+        "  summary: Summary.\n"
+        "  location:\n"
+        "    city: City\n"
+        "    region: Region\n"
+        "work: []\n"
+        "early_career: []\n"
+        "skills: []\n"
+        "education: []"
+    )
+
+
+def _write_minimal_yaml_public(path):
+    path.write_text(
+        "basics:\n"
+        "  name: '{{ name }}'\n"
+        "  email: '{{ email }}'\n"
+        "  phone: '{{ phone }}'\n"
+        "  summary: Summary.\n"
+        "  location:\n"
+        "    city: City\n"
+        "    region: Region\n"
+        "work: []\n"
+        "early_career: []\n"
+        "skills: []\n"
+        "education: []"
+    )
 
 
 def test_build_flawless_pdf_happy_path(tmp_path):
     _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
-    md_file = tmp_path / "test.md"
-    md_file.write_text(SAMPLE_MD)
-    build_pdf.build_flawless_pdf(str(md_file))
+    yaml_file = tmp_path / "test.yaml"
+    yaml_file.write_text(SAMPLE_YAML)
+    build_pdf.build_flawless_pdf(str(yaml_file))
     pdf_file = tmp_path / "john_doe_resume.pdf"
     assert pdf_file.exists()
     assert pdf_file.stat().st_size > 100
@@ -172,7 +203,7 @@ def test_build_flawless_pdf_happy_path(tmp_path):
 
 
 def test_build_flawless_pdf_missing_file(tmp_path, capsys):
-    missing = tmp_path / "nonexistent.md"
+    missing = tmp_path / "nonexistent.yaml"
     build_pdf.build_flawless_pdf(str(missing))
     captured = capsys.readouterr()
     assert "not found" in captured.out
@@ -180,16 +211,18 @@ def test_build_flawless_pdf_missing_file(tmp_path, capsys):
 
 def test_build_flawless_pdf_with_config(tmp_path):
     _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
-    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
-    build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"))
+    yaml_file = tmp_path / "cv.yaml"
+    _write_minimal_yaml(yaml_file)
+    build_pdf.build_flawless_pdf(str(yaml_file))
     assert (tmp_path / "jane_doe_resume.pdf").exists()
 
 
 def test_build_flawless_pdf_public(tmp_path):
     cfg = {"name": "Jane Doe", "email": "j@e.co", "phone": "555-0000"}
     _write_env(tmp_path / ".env.local", cfg)
-    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }} | {{ phone }}\n\nSummary.")
-    build_pdf.build_flawless_pdf(str(tmp_path / "cv.md"), public=True)
+    yaml_file = tmp_path / "cv.yaml"
+    _write_minimal_yaml_public(yaml_file)
+    build_pdf.build_flawless_pdf(str(yaml_file), public=True)
     assert (tmp_path / "jane_doe_resume_public.pdf").exists()
     size_public = (tmp_path / "jane_doe_resume_public.pdf").stat().st_size
     assert size_public > 100
@@ -200,9 +233,9 @@ def test_build_flawless_pdf_public(tmp_path):
 
 def test_build_styled_docx_happy_path(tmp_path):
     _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
-    md_file = tmp_path / "test.md"
-    md_file.write_text(SAMPLE_MD)
-    build_docx.build_styled_docx(str(md_file))
+    yaml_file = tmp_path / "test.yaml"
+    yaml_file.write_text(SAMPLE_YAML)
+    build_docx.build_styled_docx(str(yaml_file))
     docx_file = tmp_path / "john_doe_resume.docx"
     assert docx_file.exists()
     assert docx_file.stat().st_size > 100
@@ -210,7 +243,7 @@ def test_build_styled_docx_happy_path(tmp_path):
 
 
 def test_build_styled_docx_missing_file(tmp_path, capsys):
-    missing = tmp_path / "nonexistent.md"
+    missing = tmp_path / "nonexistent.yaml"
     build_docx.build_styled_docx(str(missing))
     captured = capsys.readouterr()
     assert "not found" in captured.out
@@ -218,8 +251,9 @@ def test_build_styled_docx_missing_file(tmp_path, capsys):
 
 def test_build_styled_docx_with_config(tmp_path):
     _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
-    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
-    build_docx.build_styled_docx(str(tmp_path / "cv.md"))
+    yaml_file = tmp_path / "cv.yaml"
+    _write_minimal_yaml(yaml_file)
+    build_docx.build_styled_docx(str(yaml_file))
     assert (tmp_path / "jane_doe_resume.docx").exists()
 
 
@@ -228,9 +262,9 @@ def test_build_styled_docx_with_config(tmp_path):
 
 def test_build_html_happy_path(tmp_path):
     _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
-    md_file = tmp_path / "test.md"
-    md_file.write_text(SAMPLE_MD)
-    build_html.build_web_html(str(md_file))
+    yaml_file = tmp_path / "test.yaml"
+    yaml_file.write_text(SAMPLE_YAML)
+    build_html.build_web_html(str(yaml_file))
     html_file = tmp_path / "john_doe_resume.html"
     assert html_file.exists()
     assert html_file.stat().st_size > 100
@@ -242,7 +276,7 @@ def test_build_html_happy_path(tmp_path):
 
 
 def test_build_html_missing_file(tmp_path, capsys):
-    missing = tmp_path / "nonexistent.md"
+    missing = tmp_path / "nonexistent.yaml"
     build_html.build_web_html(str(missing))
     captured = capsys.readouterr()
     assert "not found" in captured.out
@@ -250,8 +284,9 @@ def test_build_html_missing_file(tmp_path, capsys):
 
 def test_build_html_with_config(tmp_path):
     _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
-    (tmp_path / "cv.md").write_text("# {{ name }}\n\n{{ email }}\n\nSummary.")
-    build_html.build_web_html(str(tmp_path / "cv.md"))
+    yaml_file = tmp_path / "cv.yaml"
+    _write_minimal_yaml(yaml_file)
+    build_html.build_web_html(str(yaml_file))
     html_file = tmp_path / "jane_doe_resume.html"
     assert html_file.exists()
     content = html_file.read_text()
@@ -307,3 +342,26 @@ def test_config_output_path_with_name_and_output_dir():
 def test_config_output_path_no_name_fallback():
     got = config_output_path("/tmp/cv.md", {"email": "j@e.co"}, "pdf")
     assert got == "/tmp/cv.pdf"
+
+
+def test_render_markdown(tmp_path):
+    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
+    yaml_file = tmp_path / "test.yaml"
+    yaml_file.write_text(SAMPLE_YAML)
+    output_md = tmp_path / "output.md"
+    render_markdown(str(yaml_file), str(output_md))
+    assert output_md.exists()
+    content = output_md.read_text()
+    assert DUMMY_NAME in content
+    assert "Company Name" in content
+
+
+def test_cli_no_args_md():
+    result = subprocess.run(
+        [sys.executable, "src/md/render_md.py"],
+        capture_output=True,
+        text=True,
+        cwd=SCRIPT_DIR,
+    )
+    assert result.returncode == 1
+    assert "Usage:" in result.stdout

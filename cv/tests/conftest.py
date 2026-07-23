@@ -36,6 +36,62 @@ Summary line here.
 - **B.Sc., Computer Science**, University
 """
 
+SAMPLE_YAML = """\
+basics:
+  name: "{{ name }}"
+  email: "{{ email }}"
+  phone: "{{ phone }}"
+  linkedin: "{{ linkedin }}"
+  location:
+    city: "New York"
+    region: "NY"
+  summary: "Summary line here."
+work:
+  - name: "Company Name"
+    description: "Role description here."
+    roles:
+      - position: "Engineer"
+        dates: "2020-2025"
+        highlights:
+          - "Bullet one"
+early_career: []
+skills: []
+education: []
+"""
+
+SAMPLE_YAML_INTEGRATION = """\
+basics:
+  name: "{{ name }}"
+  email: "{{ email }}"
+  phone: "{{ phone }}"
+  linkedin: "{{ linkedin }}"
+  location:
+    city: "New York"
+    region: "NY"
+  summary: "Summary line here."
+work:
+  - name: "Company Name"
+    description: "Role description here."
+    roles:
+      - position: "Engineer"
+        dates: "2020-2025"
+        highlights:
+          - "Bullet one"
+          - "Bullet two"
+          - "Bullet three"
+early_career:
+  - dates: "2015-2020"
+    details: "Junior dev at Startup"
+skills:
+  - name: "Coding"
+    keywords:
+      - "Python"
+education:
+  - studyType: "B.Sc."
+    area: "Computer Science"
+    institution: "University"
+"""
+
 DUMMY_NAME = "John Doe"
 DUMMY_EMAIL = "john@example.com"
 DUMMY_PHONE = "555-123-4567"

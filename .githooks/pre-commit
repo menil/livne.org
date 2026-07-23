@@ -6,8 +6,22 @@
 
 PII_REGEX='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[0-9]{3}-[0-9]{3}-[0-9]{4}|linkedin\.com/in/[a-zA-Z0-9_-]+'
 
-# Only check files that are being added or modified
-git diff --cached --name-only --diff-filter=ACM | while IFS= read -r FILE; do
+# Whitelist of allowed mock values (lowercased)
+WHITELIST="john@example.com
+555-123-4567
+linkedin.com/in/johndoe
+j@e.co
+test@example.com
+user@example.com"
+
+# Create a temporary file to store staged files list and avoid subshell pipeline exit issues
+TEMP_FILES_LIST=$(mktemp)
+git diff --cached --name-only --diff-filter=ACM > "$TEMP_FILES_LIST"
+
+while read -r FILE; do
+	# Skip empty lines
+	[ -z "$FILE" ] && continue
+
 	# Skip binary files and this hook itself
 	case "$FILE" in
 		*.png | *.jpg | *.jpeg | *.gif | *.pdf | *.docx | .githooks/*) continue ;;
@@ -16,9 +30,18 @@ git diff --cached --name-only --diff-filter=ACM | while IFS= read -r FILE; do
 	# Skip if file doesn't exist (deleted)
 	[ -f "$FILE" ] || continue
 
-	# Pipe directly to grep to avoid loading file into memory
-	if git show ":$FILE" 2>/dev/null | grep -qiE "$PII_REGEX"; then
-		echo "PII detected in $FILE"
-		exit 1
+	# Find all matching PII strings in the staged version of the file
+	MATCHES=$(git show ":$FILE" 2>/dev/null | grep -oiE "$PII_REGEX" | tr '[:upper:]' '[:lower:]' | sort -u)
+	if [ -n "$MATCHES" ]; then
+		# Check if any matches are not in the whitelist
+		for MATCH in $MATCHES; do
+			if ! echo "$WHITELIST" | grep -qxF "$MATCH"; then
+				echo "Real PII detected in $FILE: $MATCH"
+				rm -f "$TEMP_FILES_LIST"
+				exit 1
+			fi
+		done
 	fi
-done
+done < "$TEMP_FILES_LIST"
+
+rm -f "$TEMP_FILES_LIST"

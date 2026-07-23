@@ -3,7 +3,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from tests.conftest import DEFAULT_CONFIG, SAMPLE_MD_INTEGRATION
+from tests.conftest import DEFAULT_CONFIG, SAMPLE_YAML_INTEGRATION
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 DIST_DIR = SCRIPT_DIR / "dist"
@@ -33,9 +33,9 @@ def test_build_pdf():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
         _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.md").write_text(SAMPLE_MD_INTEGRATION)
+        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
         result = subprocess.run(
-            [sys.executable, "src/pdf/build_pdf.py", str(tmp / "test.md")],
+            [sys.executable, "src/pdf/build_pdf.py", str(tmp / "test.yaml")],
             capture_output=True,
             text=True,
             cwd=SCRIPT_DIR,
@@ -49,9 +49,9 @@ def test_build_pdf_public():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
         _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.md").write_text(SAMPLE_MD_INTEGRATION)
+        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
         result = subprocess.run(
-            [sys.executable, "src/pdf/build_pdf.py", "--public", str(tmp / "test.md")],
+            [sys.executable, "src/pdf/build_pdf.py", "--public", str(tmp / "test.yaml")],
             capture_output=True,
             text=True,
             cwd=SCRIPT_DIR,
@@ -65,9 +65,9 @@ def test_build_docx():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
         _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.md").write_text(SAMPLE_MD_INTEGRATION)
+        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
         result = subprocess.run(
-            [sys.executable, "src/docx/build_docx.py", str(tmp / "test.md")],
+            [sys.executable, "src/docx/build_docx.py", str(tmp / "test.yaml")],
             capture_output=True,
             text=True,
             cwd=SCRIPT_DIR,
@@ -81,9 +81,9 @@ def test_build_html():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
         _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.md").write_text(SAMPLE_MD_INTEGRATION)
+        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
         result = subprocess.run(
-            [sys.executable, "src/html/build_html.py", str(tmp / "test.md")],
+            [sys.executable, "src/html/build_html.py", str(tmp / "test.yaml")],
             capture_output=True,
             text=True,
             cwd=SCRIPT_DIR,

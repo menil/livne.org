@@ -85,7 +85,8 @@ def config_output_path(
         slug = name.lower().replace(" ", "_")
         filename = f"{slug}_resume.{ext}"
     else:
-        filename = os.path.basename(md_file).replace(".md", f".{ext}")
+        base, _ = os.path.splitext(os.path.basename(md_file))
+        filename = f"{base}.{ext}"
     if output_dir is not None:
         return os.path.join(output_dir, filename)
     return os.path.join(os.path.dirname(md_file), filename)

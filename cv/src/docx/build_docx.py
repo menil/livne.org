@@ -2,13 +2,17 @@
 import os
 import sys
 
+import jinja2
 import pypandoc
+import yaml
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from docx import Document
 from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def _style_name(paragraph: Paragraph) -> str:
@@ -65,25 +69,38 @@ def _format_job_title(paragraph: Paragraph) -> None:
     paragraph.paragraph_format.space_after = Pt(1)
 
 
-def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
-    if not os.path.exists(input_file):
-        print(f"Error: {input_file} not found.")
+def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
+    if not os.path.exists(yaml_file):
+        print(f"Error: {yaml_file} not found.")
         return
 
-    config = load_config(input_file)
+    # 1. Load PII config
+    config = load_config(yaml_file)
 
-    final_output = config_output_path(input_file, config, "docx", output_dir=output_dir)
+    # 2. Read and parse YAML
+    with open(yaml_file, encoding="utf-8") as f:
+        yaml_content = f.read()
+    rendered_yaml = apply_config(yaml_content, config)
+    data = yaml.safe_load(rendered_yaml)
+
+    # 3. Derive output paths
+    final_output = config_output_path(yaml_file, config, "docx", output_dir=output_dir)
     base_output = final_output.replace(".docx", "_base.docx")
 
-    print("1. Reading and auto-formatting Markdown...")
-    with open(input_file, encoding="utf-8") as f:
-        raw_md = f.read()
+    # 4. Render clean Markdown string in memory
+    project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
+    tpl_path = os.path.join(project_root, "src", "md", "template.md")
+    with open(tpl_path, encoding="utf-8") as f:
+        tpl_content = f.read()
+    clean_md = jinja2.Template(tpl_content).render(**data)
 
-    raw_md = apply_config(raw_md, config)
+    # Clean up blank lines in markdown
+    import re
 
-    clean_md = fix_markdown_spacing(raw_md)
+    clean_md = re.sub(r"\n{3,}", "\n\n", clean_md).strip() + "\n"
+    clean_md = fix_markdown_spacing(clean_md)
 
-    print("2. Converting to baseline DOCX via Pandoc...")
+    # 5. Convert to baseline DOCX via Pandoc
     pypandoc.convert_text(
         clean_md,
         "docx",
@@ -92,7 +109,7 @@ def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
         extra_args=["--standalone"],
     )
 
-    print("3. Applying custom executive styling...")
+    # 6. Apply custom styling
     doc = Document(base_output)
 
     for section in doc.sections:
@@ -107,8 +124,8 @@ def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     normal.paragraph_format.line_spacing = 1.25
 
-    cfg_name = config["name"]
-    cfg_email = config["email"]
+    cfg_name = config.get("name", data["basics"].get("name", ""))
+    cfg_email = config.get("email", data["basics"].get("email", ""))
 
     found_name = False
     for paragraph in doc.paragraphs:
@@ -138,7 +155,7 @@ def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python build_docx.py <input.md>")
+        print("Usage: python build_docx.py <input.yaml>")
         sys.exit(1)
     _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     _dist_dir = os.path.join(_project_root, "dist")

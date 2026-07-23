@@ -1,0 +1,53 @@
+<h1>{{ basics.name }}</h1>
+<p>{{ basics.location.city }}, {{ basics.location.region }} | <a href="mailto:{{ basics.email }}">{{ basics.email }}</a>
+{%- if basics.phone %} | {{ basics.phone }}{% endif -%}
+{%- if basics.linkedin %} | <a href="{{ basics.linkedin }}">{{ basics.linkedin | replace('https://', '') | replace('www.', '') }}</a>{% endif -%}</p>
+
+<p>{{ basics.summary | trim }}</p>
+
+<h2>Professional Experience</h2>
+
+{% for comp in work %}
+<div class="company-header{% if is_pdf and 'Contacts+' in comp.name %} page-break{% endif %}">
+    <span class="company-name">{{ comp.name }}</span>
+    <span class="company-desc">{{ comp.description }}</span>
+</div>
+{% for role in comp.roles %}
+<div class="role-header">
+    <span class="role-title">{{ role.position }}</span>
+    <span class="role-date">{{ role.dates }}</span>
+</div>
+<ul>
+    {% for highlight in role.highlights %}
+    <li>{{ highlight }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}
+{% endfor %}
+
+<h2>Early Career History</h2>
+<table class="skills-table early-career">
+    {% for entry in early_career %}
+    <tr>
+        <td class="skill-cat">{{ entry.dates }}</td>
+        <td class="skill-list">{{ entry.details }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Core Technologies & Architectures</h2>
+<table class="skills-table">
+    {% for skill in skills %}
+    <tr>
+        <td class="skill-cat">{{ skill.name }}</td>
+        <td class="skill-list">{{ skill.keywords | join(', ') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Education</h2>
+<div class="education">
+    {% for edu in education %}
+    <strong>{{ edu.studyType }}, {{ edu.area }}</strong>, {{ edu.institution }}
+    {% endfor %}
+</div>
