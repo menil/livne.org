@@ -137,8 +137,8 @@ jobs:
             if [ -f "$file" ]; then
               filename="${file##*/}"
               # Upload versioned release subfolder and latest stable folder in parallel
-              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/releases/$TAG/$filename" --file="$file" &
-              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/latest/$filename" --file="$file" &
+              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/releases/$TAG/$filename" --file="$file" --remote &
+              wrangler r2 object put "${{ secrets.CLOUDFLARE_R2_BUCKET }}/latest/$filename" --file="$file" --remote &
             fi
           done
           wait
