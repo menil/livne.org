@@ -13,7 +13,6 @@ _ENV_KEYS = {
     "email": "RESUME_EMAIL",
     "phone": "RESUME_PHONE",
     "linkedin": "RESUME_LINKEDIN",
-    "location": "RESUME_LOCATION",
 }
 
 
