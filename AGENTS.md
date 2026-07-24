@@ -3,10 +3,11 @@
 ## Project structure
 
 - `cv/` — Resume source files. See [`cv/README.md`](cv/README.md) for usage.
-  - `src/pdf/build_pdf.py` — Main script: reads Markdown, generates a two-page PDF resume via WeasyPrint.
-  - `src/docx/build_docx.py` — Script to generate a styled DOCX from Markdown.
-  - `src/html/build_html.py` — Script to generate a styled HTML resume from Markdown.
-  - `resources/cv.md` — Resume in Markdown.
+  - `src/pdf/build_pdf.py` — Main script: reads YAML database, generates a two-page PDF resume via WeasyPrint.
+  - `src/docx/build_docx.py` — Script to generate a styled DOCX from YAML database.
+  - `src/html/build_html.py` — Script to generate a styled HTML resume from YAML database.
+  - `src/md/render_md.py` — Script to generate a styled Markdown resume from YAML database.
+  - `resources/cv.yaml` — Resume database in YAML.
   - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs + Python deps).
   - `.envrc` — direnv auto-activation.
 - Root `.gitignore` — standard ignores for generated/cache files.
@@ -36,6 +37,6 @@ All development and execution happens inside the devenv shell under the `cv/` di
 
 ## PII & Environment Configuration
 
-- **PII Redaction**: Do not write real Personally Identifiable Information (PII) like names, phone numbers, personal emails, physical addresses, or LinkedIn handles into source markdown files (e.g. `cv.md` or templates).
-- **Configuration & Placeholders**: Always use Jinja2 placeholders (e.g. `{{ name }}`, `{{ email }}`) in `cv.md` and load values dynamically using the `.env.local` file (configured via `cv/.env.local` or environment variables).
+- **PII Redaction**: Do not write real Personally Identifiable Information (PII) like names, phone numbers, personal emails, physical addresses, or LinkedIn handles into the source database `cv.yaml` or templates.
+- **Configuration & Placeholders**: Always use Jinja2 placeholders (e.g. `{{ name }}`, `{{ email }}`) in `cv.yaml` and load values dynamically using the `.env.local` file (configured via `cv/.env.local` or environment variables).
 - **Validation**: The repository enforces a local pre-commit hook `.githooks/pre-commit` to block staged commits containing raw email addresses, phone numbers, or LinkedIn profile URLs. Always ensure changes are compliant before committing.

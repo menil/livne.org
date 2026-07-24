@@ -90,7 +90,6 @@ jobs:
           RESUME_EMAIL: ${{ secrets.RESUME_EMAIL }}
           RESUME_PHONE: ${{ secrets.RESUME_PHONE }}
           RESUME_LINKEDIN: ${{ secrets.RESUME_LINKEDIN }}
-          RESUME_LOCATION: ${{ secrets.RESUME_LOCATION }}
 
       - name: Install Wrangler globally
         run: npm install -g wrangler

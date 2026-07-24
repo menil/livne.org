@@ -96,6 +96,5 @@ DUMMY_NAME = "John Doe"
 DUMMY_EMAIL = "john@example.com"
 DUMMY_PHONE = "555-123-4567"
 DUMMY_LINKEDIN = "https://linkedin.com/in/johndoe"
-DUMMY_LOCATION = "New York, NY"
 
 DEFAULT_CONFIG = {"name": DUMMY_NAME, "email": DUMMY_EMAIL}
