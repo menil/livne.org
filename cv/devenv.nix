@@ -40,6 +40,7 @@
       pytest-cov
       mypy
       pyyaml
+      jsonschema
     ]);
   };
 }
