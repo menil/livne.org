@@ -3,7 +3,7 @@
 [![CI](https://github.com/menil/livne.org/actions/workflows/build.yml/badge.svg)](https://github.com/menil/livne.org/actions/workflows/build.yml)
 [![Python](https://img.shields.io/badge/python-3.13-blue?logo=python)](https://www.python.org)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000)](https://docs.astral.sh/ruff)
-[![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](.coveragerc)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](.coveragerc)
 [![License](https://img.shields.io/github/license/menil/livne.org)](../LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/menil/livne.org)](https://github.com/menil/livne.org/commits/main)
 
@@ -19,12 +19,24 @@ Builds a polished PDF, DOCX, HTML, and Markdown resume from a single structured 
                                 |
                                 v
 +------------------+  +---------+---------+
-|  resources/      |  |  src/common.py    |  <-- Injects details &
+|  resources/      |  |  src/common.py    |  <-- Loads config &
 |  cv.yaml         +->|                   |      derives output filenames
-|  (YAML Source)   |  +---------+---------+
+|  (JSON Resume)   |  +---------+---------+
 +------------------+            |
                                 |
-       +------------------------+------------------------+
+                                v
+                     +--------------------+
+                     | src/resume_model.py|  <-- Renders PII placeholders,
+                     +---------+----------+      groups work by company,
+                               |                 splits early career
+                               v
+                      +--------------------+
+                      |src/validate_resume.|  <-- Official JSON Resume schema
+                      |        py          |      check, gated by
+                      +---------+----------+      `just build`/`just validate`
+                     +---------+----------+
+                               |
+       +-----------------------+------------------------+
        |                        |                        |
        v                        v                        v
 +--------------+         +--------------+         +--------------+
@@ -83,6 +95,24 @@ just build
 ./src/html/build_html.py resources/cv.yaml                  # generates HTML (web)
 ```
 
+## Resume data format
+
+`resources/cv.yaml` follows the [JSON Resume](https://jsonresume.org/schema/) schema in YAML form, with one project-specific convention:
+
+* **Multi-role companies** store one `work` entry per position. `src/resume_model.py` groups consecutive same-company entries into a single company block at render time, and moves positions that ended more than 10 years ago into an "Earlier Career History" section.
+
+Validation (`just validate-resume`) renders PII placeholders with synthetic dummy values and validates `resources/cv.yaml` against the [official JSON Resume schema](https://jsonresume.org/schema/) (vendored at `resources/resume.schema.json`) using `jsonschema`.
+
+The vendored `resources/resume.schema.json` is pinned from [jsonresume/resume-schema](https://github.com/jsonresume/resume-schema) tag `v1.2.1` (commit `50798e359292ad4448d95b3bb0de5f694d6bcc4b`). To update it, diff against the upstream tag and review the changes before committing:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/jsonresume/resume-schema/v1.2.1/schema.json | diff - resources/resume.schema.json
+```
+
+Then bump the pinned tag/commit here and in the `$comment` inside `resources/resume.schema.json`.
+
+PII values (`name`, `email`, `phone`, `linkedin`) remain Jinja2 placeholders and are injected from `.env.local` or environment variables at render time. LinkedIn lives under `basics.profiles`.
+
 ## Development
 
 All commands run inside `devenv shell`:
@@ -94,8 +124,9 @@ All commands run inside `devenv shell`:
 | `just check-format` | Check formatting without changes |
 | `just typecheck` | mypy strict mode on `src/` |
 | `just test` | pytest + coverage (threshold: 90%) |
-| `just build` | Generate Markdown, PDF, DOCX, and HTML |
-| `just validate` | Run lint + format-check + typecheck + test |
+| `just validate-resume` | Schema-validate `resources/cv.yaml` |
+| `just build` | Generate Markdown, PDF, DOCX, and HTML (validates first) |
+| `just validate` | Run lint + format-check + schema + typecheck + test |
 
 ## Project structure
 
@@ -117,14 +148,21 @@ cv/
 │   │   └── template.md      # Jinja2 Markdown template
 │   ├── body.html        # Shared Jinja2 template for HTML & PDF layout
 │   ├── common.py        # Shared configuration & utility functions
+│   ├── resume_model.py  # JSON Resume model: placeholders, grouping, early career
+│   ├── validate_resume.py  # Validates cv.yaml against the official JSON Resume schema
 │   └── __init__.py
 ├── resources/
-│   └── cv.yaml          # Resume structured database source
+│   ├── cv.yaml             # Resume structured database source (JSON Resume)
+│   └── resume.schema.json  # Official JSON Resume schema (vendored)
 ├── tests/
 │   ├── conftest.py      # Shared test fixtures and setup
 │   ├── test_build.py    # Unit tests for build scripts
 │   ├── test_integration.py  # End-to-end smoke tests
-│   └── test_spacing.py  # Unit tests for markdown spacing
+│   ├── test_model.py    # Tests for the resume model
+│   ├── test_validate.py # Tests for schema validation
+│   ├── test_golden.py   # Byte-identical golden output regression tests
+│   ├── test_spacing.py  # Unit tests for markdown spacing
+│   └── golden/          # Captured golden outputs (dummy PII)
 ├── devenv.nix / .yaml / .lock
 ├── mypy.ini / ruff.toml / .coveragerc
 ├── Justfile / .envrc / README.md

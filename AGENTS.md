@@ -7,7 +7,9 @@
   - `src/docx/build_docx.py` — Script to generate a styled DOCX from YAML database.
   - `src/html/build_html.py` — Script to generate a styled HTML resume from YAML database.
   - `src/md/render_md.py` — Script to generate a styled Markdown resume from YAML database.
-  - `resources/cv.yaml` — Resume database in YAML.
+  - `src/resume_model.py` — Shared model: renders PII placeholders, groups work by company, splits early career.
+  - `src/validate_resume.py` — Validates `cv.yaml` against the official JSON Resume schema (gated by `just validate`).
+  - `resources/cv.yaml` — Resume database in YAML (JSON Resume schema, year-only dates).
   - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs + Python deps).
   - `.envrc` — direnv auto-activation.
 - Root `.gitignore` — standard ignores for generated/cache files.
