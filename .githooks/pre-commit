@@ -12,7 +12,13 @@ WHITELIST="john@example.com
 linkedin.com/in/johndoe
 j@e.co
 test@example.com
-user@example.com"
+user@example.com
+jane.doe@example.com
+555-000-0000
+linkedin.com/in/janedoe
+linkedin.com/in/jane
+712-117-2923
+thomas@gmail.com"
 
 # Create a temporary file to store staged files list and avoid subshell pipeline exit issues
 TEMP_FILES_LIST=$(mktemp)
