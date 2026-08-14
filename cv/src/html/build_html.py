@@ -4,9 +4,9 @@ import re
 import sys
 
 import jinja2
-import yaml
 
-from src.common import apply_config, config_output_path, load_config
+from src import resume_model
+from src.common import config_output_path
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -61,36 +61,32 @@ def build_web_html(yaml_file: str, output_dir: str | None = None) -> None:
         print(f"Error: {yaml_file} not found!")
         return
 
-    # 1. Load PII config
-    config = load_config(yaml_file)
-    linkedin_url = config.get("linkedin", "")
-    email = config.get("email", "")
+    # 1. Load YAML, render placeholders, and prepare the resume model
+    data = resume_model.load_resume(yaml_file)
+    basics = data["basics"]
+    linkedin_url = basics.get("linkedin", "")
+    email = basics.get("email", "")
+    config_name = basics.get("name", "")
 
-    # 2. Read and parse YAML
-    with open(yaml_file, encoding="utf-8") as f:
-        yaml_content = f.read()
-    rendered_yaml = apply_config(yaml_content, config)
-    data = yaml.safe_load(rendered_yaml)
+    # 2. Derive output path using name in config
+    html_file = config_output_path(yaml_file, {"name": config_name}, "html", output_dir=output_dir)
 
-    # 3. Derive output path using name in config
-    html_file = config_output_path(yaml_file, config, "html", output_dir=output_dir)
-
-    # 4. Prepare data for body rendering (web version hides phone and linkedin in header)
+    # 3. Prepare data for body rendering (web version hides phone and linkedin in header)
     body_data = dict(data)
-    body_basics = dict(data["basics"])
+    body_basics = dict(basics)
     body_basics.pop("phone", None)
     body_basics.pop("linkedin", None)
     body_data["basics"] = body_basics
     body_data["is_pdf"] = False
 
-    # 5. Render html_body from body.html template
+    # 4. Render html_body from body.html template
     project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
     body_tpl_path = os.path.join(project_root, "src", "body.html")
     with open(body_tpl_path, encoding="utf-8") as f:
         body_tpl = f.read()
     html_body = jinja2.Template(body_tpl).render(**body_data)
 
-    # 6. Read CSS and outer template
+    # 5. Read CSS and outer template
     css_path = os.path.join(_SCRIPT_DIR, "style-web.css")
     with open(css_path, encoding="utf-8") as f:
         css_content = f.read()
@@ -99,11 +95,10 @@ def build_web_html(yaml_file: str, output_dir: str | None = None) -> None:
     with open(tpl_path, encoding="utf-8") as f:
         tpl_content = f.read()
 
-    config_name = config.get("name", data["basics"].get("name", ""))
     slug = config_name.lower().replace(" ", "_")
     pdf_url = f"{slug}_resume.pdf"
 
-    # 7. Render full HTML
+    # 6. Render full HTML
     full_html = jinja2.Template(tpl_content).render(
         title=f"{config_name} - Principal Software Engineer",
         css_content=css_content,
