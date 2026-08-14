@@ -30,13 +30,13 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: cv/.devenv
-          key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock') }}
+          key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock', 'cv/devenv.nix') }}
       - name: Build devenv shell (cached)
         working-directory: ./cv
         run: |
           nix profile install nixpkgs#devenv
           devenv shell bash -e -c 'echo "devenv cached"'
-      - name: Lint, format check, and test
+      - name: Lint, format, schema validation, and tests
         working-directory: ./cv
         run: devenv shell bash -e -c 'just validate && just test'
 
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: cv/.devenv
-          key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock') }}
+          key: ${{ runner.os }}-devenv-v1-${{ hashFiles('cv/devenv.lock', 'cv/devenv.nix') }}
 
       - name: Build devenv shell (cached)
         working-directory: ./cv
