@@ -5,9 +5,9 @@ import sys
 
 import jinja2
 import weasyprint
-import yaml
 
-from src.common import apply_config, config_output_path, load_config
+from src import resume_model
+from src.common import config_output_path
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -71,21 +71,16 @@ def build_flawless_pdf(yaml_file: str, public: bool = False, output_dir: str | N
         print(f"Error: {yaml_file} not found!")
         return
 
-    # 1. Load PII config
-    config = load_config(yaml_file)
+    # 1. Load YAML, render placeholders, and prepare the resume model
+    data = resume_model.load_resume(yaml_file)
 
-    # 2. Read and parse YAML
-    with open(yaml_file, encoding="utf-8") as f:
-        yaml_content = f.read()
-    rendered_yaml = apply_config(yaml_content, config)
-    data = yaml.safe_load(rendered_yaml)
-
-    # 3. Derive output path
-    pdf_file = config_output_path(yaml_file, config, "pdf", output_dir=output_dir)
+    # 2. Derive output path
+    name = data["basics"].get("name", "")
+    pdf_file = config_output_path(yaml_file, {"name": name}, "pdf", output_dir=output_dir)
     if public:
         pdf_file = pdf_file.replace(".pdf", "_public.pdf")
 
-    # 4. Prepare data for body rendering (public version hides phone)
+    # 3. Prepare data for body rendering (public version hides phone)
     body_data = dict(data)
     body_basics = dict(data["basics"])
     if public:
@@ -93,19 +88,19 @@ def build_flawless_pdf(yaml_file: str, public: bool = False, output_dir: str | N
     body_data["basics"] = body_basics
     body_data["is_pdf"] = True
 
-    # 5. Render html_body from body.html template
+    # 4. Render html_body from body.html template
     project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
     body_tpl_path = os.path.join(project_root, "src", "body.html")
     with open(body_tpl_path, encoding="utf-8") as f:
         body_tpl = f.read()
     html_body = jinja2.Template(body_tpl).render(**body_data)
 
-    # 6. Read PDF stylesheet
+    # 5. Read PDF stylesheet
     css_path = os.path.join(_SCRIPT_DIR, "style.css")
     with open(css_path, encoding="utf-8") as f:
         css_content = f.read()
 
-    # 7. Render full HTML wrapper
+    # 6. Render full HTML wrapper
     full_html = f"""<!DOCTYPE html>
 <html>
 <head>
