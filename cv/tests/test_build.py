@@ -168,7 +168,6 @@ def _write_minimal_yaml(path):
         "    city: City\n"
         "    region: Region\n"
         "work: []\n"
-        "early_career: []\n"
         "skills: []\n"
         "education: []"
     )
@@ -185,7 +184,6 @@ def _write_minimal_yaml_public(path):
         "    city: City\n"
         "    region: Region\n"
         "work: []\n"
-        "early_career: []\n"
         "skills: []\n"
         "education: []"
     )

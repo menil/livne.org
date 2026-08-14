@@ -41,20 +41,21 @@ basics:
   name: "{{ name }}"
   email: "{{ email }}"
   phone: "{{ phone }}"
-  linkedin: "{{ linkedin }}"
   location:
     city: "New York"
     region: "NY"
   summary: "Summary line here."
+  profiles:
+    - network: LinkedIn
+      url: "{{ linkedin }}"
 work:
   - name: "Company Name"
     description: "Role description here."
-    roles:
-      - position: "Engineer"
-        dates: "2020-2025"
-        highlights:
-          - "Bullet one"
-early_career: []
+    position: "Engineer"
+    startDate: 2020
+    endDate: 2025
+    highlights:
+      - "Bullet one"
 skills: []
 education: []
 """
@@ -64,24 +65,27 @@ basics:
   name: "{{ name }}"
   email: "{{ email }}"
   phone: "{{ phone }}"
-  linkedin: "{{ linkedin }}"
   location:
     city: "New York"
     region: "NY"
   summary: "Summary line here."
+  profiles:
+    - network: LinkedIn
+      url: "{{ linkedin }}"
 work:
   - name: "Company Name"
     description: "Role description here."
-    roles:
-      - position: "Engineer"
-        dates: "2020-2025"
-        highlights:
-          - "Bullet one"
-          - "Bullet two"
-          - "Bullet three"
-early_career:
-  - dates: "2015-2020"
-    details: "Junior dev at Startup"
+    position: "Engineer"
+    startDate: 2020
+    endDate: 2025
+    highlights:
+      - "Bullet one"
+      - "Bullet two"
+      - "Bullet three"
+  - name: "Startup"
+    position: "Junior Dev"
+    startDate: 2015
+    endDate: 2020
 skills:
   - name: "Coding"
     keywords:

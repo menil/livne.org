@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Jane Doe - Principal Software Engineer</title>
+    <style>
+    :root {
+    --dark-navy: #1a252f;
+    --accent-blue: #2980b9;
+    --text-dark: #333333;
+    --text-light: #555555;
+    --text-lighter: #666666;
+    --border-color: #e0e6ed;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 40px 20px;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.resume-container {
+    background-color: #ffffff;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 60px 70px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+h1 {
+    font-size: 34px;
+    color: var(--dark-navy);
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+
+h1 + p {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+h1 + p + p {
+    font-size: 14.5px;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+h2 {
+    font-size: 18px;
+    color: var(--accent-blue);
+    border-bottom: 1px solid #c8d6e5;
+    padding-bottom: 6px;
+    margin-top: 30px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.company-header {
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.company-name {
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--dark-navy);
+}
+
+.company-desc {
+    font-style: italic;
+    color: var(--text-lighter);
+    font-size: 13px;
+    display: block;
+    margin-top: 3px;
+}
+
+.role-header {
+    margin-top: 12px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.role-title {
+    font-weight: bold;
+    color: #34495e;
+    font-size: 15px;
+}
+
+.role-date {
+    font-weight: bold;
+    color: var(--accent-blue);
+    font-size: 14px;
+}
+
+ul {
+    margin-top: 8px;
+    margin-bottom: 18px;
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.skills-table td {
+    padding: 6px 0;
+    vertical-align: top;
+}
+
+.skill-cat {
+    font-weight: bold;
+    width: 25%;
+    color: #2c3e50;
+}
+
+.skill-list {
+    width: 75%;
+    color: #444444;
+    text-align: left;
+}
+
+.early-career td {
+    padding: 4px 0;
+}
+
+.education {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 15px;
+    padding-bottom: 20px;
+}
+
+.action-links {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.action-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin: 0 6px;
+    background-color: var(--accent-blue);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.action-link:hover {
+    background-color: #1f6ba0;
+}
+
+.action-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+        background-color: #ffffff;
+    }
+    .resume-container {
+        padding: 30px 20px;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .role-header {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .role-date {
+        margin-top: 4px;
+    }
+    .skills-table td {
+        display: block;
+        width: 100%;
+    }
+    .skill-cat {
+        padding-bottom: 0;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        
+        <div class="action-links">
+            
+            <a href="https://www.linkedin.com/in/janedoe" class="action-link" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </a>
+            
+            
+            <a href="mailto:jane.doe@example.com" class="action-link" aria-label="Email">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </a>
+            
+            
+            <a href="jane_doe_resume.pdf" class="action-link" aria-label="Download PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+            </a>
+            
+        </div>
+        
+        <h1>Jane Doe</h1>
+<p>Seattle, WA | <a href="mailto:jane.doe@example.com">jane.doe@example.com</a></p>
+
+<p>Principal Software Engineer and Technical Architect specializing in highly scalable backend systems, complex data pipelines, and infrastructure optimization. Proven track record of driving business value through cross-functional collaboration, partnering directly with business departments to engineer solutions that optimize workflows, scale revenue, and generate massive cost savings. Led the foundational architecture from an early-stage startup to a successful exit.</p>
+
+<h2>Professional Experience</h2>
+
+
+<div class="company-header">
+    <span class="company-name">Whitepages</span>
+    <span class="company-desc">A high-volume data platform serving identity verification, people search, and real estate products at scale.</span>
+</div>
+
+<div class="role-header">
+    <span class="role-title">Principal Software Engineer, Data & Web</span>
+    <span class="role-date">2020-2026</span>
+</div>
+<ul>
+    
+    <li>Spearheaded generative AI integration into core engineering workflows by driving the adoption and establishing organizational standards for AI coding using Claude Code, accelerating overall developer velocity</li>
+    
+    <li>Led the ground-up architecture and launch of a new consumer PropTech platform, engineering a highly scalable Typescript backend deployed on Cloudflare workers, integrating predictive machine learning models built in Python to generate automated, high-accuracy property valuations and rental income estimates at scale</li>
+    
+    <li>Led the implementation of Landon, the Whitepages AI real estate assistant using AWS Bedrock, OpenSearch-backed RAG architecture and LLM integration</li>
+    
+    <li>Conceptualized and drove the implementation of a centralized internal platform that accelerated the marketing department's experimentation velocity by 3x, working with VP-level stakeholders to directly unlock new company revenue streams, earning the CEO spot bonus for outstanding business impact</li>
+    
+    <li>Partnered with the marketing department to drive conversion rate optimization (CRO) across user-facing properties, championing strict architectural standards for Core Web Vitals and technical SEO that directly improved organic reach and user acquisition</li>
+    
+    <li>Fostered a culture of engineering excellence by mentoring cross-functional teams, leading technical training sessions, and establishing best practices for system architecture</li>
+    
+</ul>
+
+<div class="role-header">
+    <span class="role-title">Senior Software Engineer, Data</span>
+    <span class="role-date">2019-2020</span>
+</div>
+<ul>
+    
+    <li>Rebuilt the core Whitepages data asset from scratch following a corporate spin-off, driving the implementation of a highly scalable data ingestion pipeline using Scala, Apache Spark, Databricks, Elasticsearch and Prefect to power the company's central search product</li>
+    
+    <li>Spearheaded the search result optimization initiative across the organization</li>
+    
+    <li>Engineered six-figure cost savings in the backend systems by optimizing Elasticsearch infrastructure, allowing the company to use in-house solutions and bypass an expensive managed-hosting migration</li>
+    
+</ul>
+
+
+<div class="company-header">
+    <span class="company-name">Contacts+ (acquired by FullContact)</span>
+    <span class="company-desc">An industry-leading identity resolution platform and SaaS provider for professional contact management.</span>
+</div>
+
+<div class="role-header">
+    <span class="role-title">Senior Backend Architect, FullContact</span>
+    <span class="role-date">2018-2019</span>
+</div>
+<ul>
+    
+    <li>Directed the continued leadership of the Contacts+ backend and data asset development following the acquisition of Contacts+</li>
+    
+</ul>
+
+<div class="role-header">
+    <span class="role-title">Senior Software Architect, Contacts+</span>
+    <span class="role-date">2012-2018</span>
+</div>
+<ul>
+    
+    <li>Employee #1 at an early-stage startup, driving the ground-up architecture of a highly scalable backend and proprietary data asset leveraging MongoDB and Redis, that grew to support hundreds of thousands of daily active users and culminated in a successful exit</li>
+    
+    <li>Architected and deployed a high-throughput Node.js API layer, alongside complex data aggregation pipelines designed to synthesize millions of records from various sources into a unified, clean data model</li>
+    
+    <li>Engineered the native contacts management client app for Android, applying deep systems knowledge to optimize performance, memory usage and battery consumption across Dalvik and ART runtimes</li>
+    
+</ul>
+
+
+
+<h2>Early Career History</h2>
+<table class="skills-table early-career">
+    
+    <tr>
+        <td class="skill-cat">2007-2011</td>
+        <td class="skill-list">Software Developer, R&D Team Leader, ViGSM</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">2006-2007</td>
+        <td class="skill-list">Software Developer, Atelis PLC</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">2005-2006</td>
+        <td class="skill-list">Software Developer, Winbond</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">2000-2004</td>
+        <td class="skill-list">Developer, KDE (Open Source Project)</td>
+    </tr>
+    
+</table>
+
+<h2>Core Technologies & Architectures</h2>
+<table class="skills-table">
+    
+    <tr>
+        <td class="skill-cat">Languages & Frameworks</td>
+        <td class="skill-list">Java, Scala, TypeScript, JavaScript, Python, C, C++, Perl, Shell Scripting</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">AI & Machine Learning</td>
+        <td class="skill-list">LLM Integration, RAG, AWS Bedrock, Claude Code, OpenRouter, OpenCode, Predictive ML Models</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">Cloud & Infrastructure</td>
+        <td class="skill-list">AWS (EC2, S3, Route 53, Lambda, IAM), Cloudflare (R2, Cloudflare Workers, WAF)</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">Databases & Data Stores</td>
+        <td class="skill-list">Elasticsearch/OpenSearch, MongoDB, DynamoDB, Redis/Valkey, PostgreSQL, MySQL</td>
+    </tr>
+    
+    <tr>
+        <td class="skill-cat">DevOps & Orchestration</td>
+        <td class="skill-list">Kubernetes, Docker, Terraform, Helm, Jenkins</td>
+    </tr>
+    
+</table>
+
+<h2>Education</h2>
+<div class="education">
+    
+    <strong>B.Sc., Computer Science</strong>, Tel Aviv University
+    
+</div>
+    </div>
+</body>
+</html>
