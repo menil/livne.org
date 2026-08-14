@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 import os
+import re
 import sys
 
 import jinja2
 import pypandoc
-import yaml
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from docx import Document
-from src.common import apply_config, config_output_path, fix_markdown_spacing, load_config
+from src import resume_model
+from src.common import config_output_path, fix_markdown_spacing
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -74,20 +75,16 @@ def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
         print(f"Error: {yaml_file} not found.")
         return
 
-    # 1. Load PII config
-    config = load_config(yaml_file)
+    # 1. Load YAML, render placeholders, and prepare the resume model
+    data = resume_model.load_resume(yaml_file)
 
-    # 2. Read and parse YAML
-    with open(yaml_file, encoding="utf-8") as f:
-        yaml_content = f.read()
-    rendered_yaml = apply_config(yaml_content, config)
-    data = yaml.safe_load(rendered_yaml)
-
-    # 3. Derive output paths
-    final_output = config_output_path(yaml_file, config, "docx", output_dir=output_dir)
+    # 2. Derive output paths
+    name = data["basics"].get("name", "")
+    email = data["basics"].get("email", "")
+    final_output = config_output_path(yaml_file, {"name": name}, "docx", output_dir=output_dir)
     base_output = final_output.replace(".docx", "_base.docx")
 
-    # 4. Render clean Markdown string in memory
+    # 3. Render clean Markdown string in memory
     project_root = os.path.dirname(os.path.dirname(_SCRIPT_DIR))
     tpl_path = os.path.join(project_root, "src", "md", "template.md")
     with open(tpl_path, encoding="utf-8") as f:
@@ -95,12 +92,10 @@ def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
     clean_md = jinja2.Template(tpl_content).render(**data)
 
     # Clean up blank lines in markdown
-    import re
-
     clean_md = re.sub(r"\n{3,}", "\n\n", clean_md).strip() + "\n"
     clean_md = fix_markdown_spacing(clean_md)
 
-    # 5. Convert to baseline DOCX via Pandoc
+    # 4. Convert to baseline DOCX via Pandoc
     pypandoc.convert_text(
         clean_md,
         "docx",
@@ -109,7 +104,7 @@ def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
         extra_args=["--standalone"],
     )
 
-    # 6. Apply custom styling
+    # 5. Apply custom styling
     doc = Document(base_output)
 
     for section in doc.sections:
@@ -124,16 +119,13 @@ def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
     normal.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     normal.paragraph_format.line_spacing = 1.25
 
-    cfg_name = config.get("name", data["basics"].get("name", ""))
-    cfg_email = config.get("email", data["basics"].get("email", ""))
-
     found_name = False
     for paragraph in doc.paragraphs:
-        if _format_name_header(paragraph, cfg_name):
+        if _format_name_header(paragraph, name):
             found_name = True
             continue
 
-        if found_name and cfg_email in paragraph.text:
+        if found_name and email in paragraph.text:
             _format_contact_info(paragraph)
             found_name = False
             continue
