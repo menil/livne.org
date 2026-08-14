@@ -16,8 +16,12 @@ check-format:
 test:
     python -m pytest tests/ -v --cov --cov-config=.coveragerc
 
+# ─── Resume schema validation ────────────────────────────────
+validate-resume:
+    python -m src.validate_resume resources/cv.yaml
+
 # ─── Build (PDF + DOCX) ─────────────────────────────────────
-build:
+build: validate-resume
     mkdir -p dist
     ./src/md/render_md.py resources/cv.yaml dist/cv.md
     ./src/pdf/build_pdf.py resources/cv.yaml            # recruiter
@@ -29,5 +33,5 @@ build:
 typecheck:
     mypy src/
 
-# ─── Validate (lint + check format + types + tests) ─────────
-validate: lint check-format typecheck test
+# ─── Validate (lint + check format + schema + types + tests) ─
+validate: lint check-format validate-resume typecheck test
