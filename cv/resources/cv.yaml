@@ -11,6 +11,7 @@ basics:
   location:
     city: Seattle
     region: WA
+    countryCode: US
   profiles:
     - network: LinkedIn
       url: "{{ linkedin }}"
