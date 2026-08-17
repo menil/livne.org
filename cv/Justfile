@@ -20,8 +20,13 @@ test:
 validate-resume:
     python -m src.validate_resume resources/cv.yaml
 
+# ─── Export YAML (PII resolved) ──────────────────────────────
+export-yaml: validate-resume
+    mkdir -p dist
+    python -m src.export_yaml resources/cv.yaml dist/cv.yaml
+
 # ─── Build (PDF + DOCX) ─────────────────────────────────────
-build: validate-resume
+build: export-yaml
     mkdir -p dist
     ./src/md/render_md.py resources/cv.yaml dist/cv.md
     ./src/pdf/build_pdf.py resources/cv.yaml            # recruiter
