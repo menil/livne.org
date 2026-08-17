@@ -1,0 +1,65 @@
+name: Weekly schema update check
+
+on:
+  schedule:
+    - cron: '23 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get latest upstream release
+        id: latest
+        run: |
+          TAG=$(curl -fsSL \
+            "https://api.github.com/repos/jsonresume/resume-schema/releases/latest" \
+            | jq -r '.tag_name')
+          if [ -z "$TAG" ] || [ "$TAG" = "null" ]; then
+            echo "::error::Failed to fetch latest release tag"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Latest upstream tag: $TAG"
+
+      - name: Fetch upstream schema
+        run: |
+          curl -fsSL \
+            "https://raw.githubusercontent.com/jsonresume/resume-schema/${{ steps.latest.outputs.tag }}/schema.json" \
+            -o /tmp/upstream.json
+
+      - name: Compare schemas
+        id: diff
+        run: |
+          jq 'del(.$comment)' cv/resources/resume.schema.json > /tmp/vendored.json
+          jq 'del(.$comment)' /tmp/upstream.json > /tmp/upstream-stripped.json
+          if cmp -s /tmp/vendored.json /tmp/upstream-stripped.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Schemas are identical — no PR needed."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Schemas differ — opening PR."
+          fi
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore(cv): update vendored resume schema to ${{ steps.latest.outputs.tag }}"
+          title: 'chore(cv): update vendored resume schema'
+          body: |
+            Upstream `jsonresume/resume-schema` has a new release: `${{ steps.latest.outputs.tag }}`.
+
+            This PR updates `cv/resources/resume.schema.json` to match.
+            Review the diff and merge when ready.
+          branch: cv/schema-update
+          delete-branch: true
+          labels: dependencies
+          add-paths: |
+            cv/resources/resume.schema.json
