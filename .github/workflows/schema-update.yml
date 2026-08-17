@@ -37,8 +37,8 @@ jobs:
       - name: Compare schemas
         id: diff
         run: |
-          jq 'del(.$comment)' cv/resources/resume.schema.json > /tmp/vendored.json
-          jq 'del(.$comment)' /tmp/upstream.json > /tmp/upstream-stripped.json
+          jq 'del(."$comment")' cv/resources/resume.schema.json > /tmp/vendored.json
+          jq 'del(."$comment")' /tmp/upstream.json > /tmp/upstream-stripped.json
           if cmp -s /tmp/vendored.json /tmp/upstream-stripped.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Schemas are identical — no PR needed."
