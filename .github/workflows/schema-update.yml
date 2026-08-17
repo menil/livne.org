@@ -1,0 +1,61 @@
+name: Schema Update Check
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Weekly on Mondays at 9 AM UTC
+  workflow_dispatch:
+
+env:
+  SCHEMA_TAG: v1.2.1
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-schema-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Fetch upstream schema
+        id: fetch
+        run: |
+          set -eo pipefail
+          curl --fail --retry 3 -sL "https://raw.githubusercontent.com/jsonresume/resume-schema/${SCHEMA_TAG}/schema.json" > upstream_schema.json
+          
+          # Helper function to clean provenance comments
+          clean_schema() {
+            jq 'del(."$comment")' "$1"
+          }
+          
+          clean_schema cv/resources/resume.schema.json > local_schema_cleaned.json
+          clean_schema upstream_schema.json > upstream_schema_cleaned.json
+
+      - name: Check for differences
+        id: diff
+        run: |
+          if ! cmp -s local_schema_cleaned.json upstream_schema_cleaned.json; then
+            echo "schema_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate date tag
+        if: steps.diff.outputs.schema_changed == 'true'
+        id: date
+        run: echo "short=$(date +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+
+      - name: Create PR for schema update
+        if: always() && steps.diff.outputs.schema_changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(cv): Update JSON Resume schema to ${SCHEMA_TAG}"
+          title: "Update JSON Resume schema to ${SCHEMA_TAG}"
+          body: |
+            Automated weekly schema update for `cv/resources/resume.schema.json`.
+            
+            This PR updates the vendored JSON Resume schema from upstream (`jsonresume/resume-schema`) to the current latest version pinned in the workflow.
+            
+            Please verify the changes and merge if appropriate.
+          branch: schema-update/${{ steps.date.outputs.short }}
