@@ -28,6 +28,14 @@ def _linkedin(basics: dict[str, Any]) -> str:
     return ""
 
 
+def _github(basics: dict[str, Any]) -> str:
+    """Return the GitHub profile URL, if any, from the basics profiles."""
+    for profile in basics.get("profiles", []):
+        if str(profile.get("network", "")).lower() == "github":
+            return str(profile.get("url", ""))
+    return ""
+
+
 def _end_year(entry: dict[str, Any]) -> int | None:
     """Extract the ending year of a work entry, or None if it has no end date."""
     end = entry.get("endDate")
@@ -100,6 +108,7 @@ def prepare(data: dict[str, Any], as_of: date | None = None) -> dict[str, Any]:
 
     basics = dict(data.get("basics", {}))
     basics["linkedin"] = _linkedin(basics)
+    basics["github"] = _github(basics)
 
     return {
         "basics": basics,

@@ -4,18 +4,22 @@
 # Prevents accidental commits of email addresses, phone numbers,
 # or LinkedIn profile URLs.
 
-PII_REGEX='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[0-9]{3}-[0-9]{3}-[0-9]{4}|linkedin\.com/in/[a-zA-Z0-9_-]+'
+PII_REGEX='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[0-9]{3}-[0-9]{3}-[0-9]{4}|linkedin\.com/in/[a-zA-Z0-9_-]+|github\.com/[a-zA-Z0-9_-]+(/?)([^/a-zA-Z0-9_-]|$)'
 
 # Whitelist of allowed mock values (lowercased)
 WHITELIST="john@example.com
 555-123-4567
 linkedin.com/in/johndoe
+github.com/johndoe
 j@e.co
 test@example.com
 user@example.com
 jane.doe@example.com
 555-000-0000
 linkedin.com/in/janedoe
+github.com/janedoe
+github.com/jsonresume
+github.com/jane
 linkedin.com/in/jane
 712-117-2923
 thomas@gmail.com"

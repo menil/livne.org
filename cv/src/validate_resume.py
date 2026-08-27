@@ -39,6 +39,7 @@ DUMMY_CONFIG = {
     "email": "jane.doe@example.com",
     "phone": "555-000-0000",
     "linkedin": "https://linkedin.com/in/janedoe",
+    "github": "https://github.com/janedoe",
 }
 
 _FORMAT_CHECKER = jsonschema.FormatChecker()

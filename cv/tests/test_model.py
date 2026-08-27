@@ -100,6 +100,26 @@ def test_linkedin_empty_without_profiles():
     assert prepared["basics"]["linkedin"] == ""
 
 
+def test_github_from_profiles():
+    data = {
+        "basics": {
+            "name": "Jane Doe",
+            "profiles": [
+                {"network": "LinkedIn", "url": "https://linkedin.com/in/jane"},
+                {"network": "GitHub", "url": "https://github.com/jane"},
+            ],
+        },
+    }
+    prepared = resume_model.prepare(data, as_of=PINNED)
+    assert prepared["basics"]["github"] == "https://github.com/jane"
+
+
+def test_github_empty_without_profiles():
+    data = {"basics": {"name": "Jane"}, "work": []}
+    prepared = resume_model.prepare(data, as_of=PINNED)
+    assert prepared["basics"]["github"] == ""
+
+
 def test_end_year_invalid_is_none():
     assert resume_model._end_year({"endDate": "not-a-date"}) is None
     assert resume_model._end_year({"endDate": 2005}) == 2005

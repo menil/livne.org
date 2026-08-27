@@ -11,6 +11,7 @@ ENV_KEYS = {
     "RESUME_EMAIL": "email",
     "RESUME_PHONE": "phone",
     "RESUME_LINKEDIN": "linkedin",
+    "RESUME_GITHUB": "github",
 }
 
 
