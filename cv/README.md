@@ -66,6 +66,7 @@ Builds a polished PDF, DOCX, HTML, and Markdown resume from a single structured 
      * `RESUME_EMAIL`
      * `RESUME_PHONE`
      * `RESUME_LINKEDIN`
+     * `RESUME_GITHUB`
 
 ## Usage
 

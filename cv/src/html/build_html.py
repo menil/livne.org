@@ -65,17 +65,19 @@ def build_web_html(yaml_file: str, output_dir: str | None = None) -> None:
     data = resume_model.load_resume(yaml_file)
     basics = data["basics"]
     linkedin_url = basics.get("linkedin", "")
+    github_url = basics.get("github", "")
     email = basics.get("email", "")
     config_name = basics.get("name", "")
 
     # 2. Derive output path using name in config
     html_file = config_output_path(yaml_file, {"name": config_name}, "html", output_dir=output_dir)
 
-    # 3. Prepare data for body rendering (web version hides phone and linkedin in header)
+    # 3. Prepare data for body rendering (web version hides phone, linkedin, and github in header)
     body_data = dict(data)
     body_basics = dict(basics)
     body_basics.pop("phone", None)
     body_basics.pop("linkedin", None)
+    body_basics.pop("github", None)
     body_data["basics"] = body_basics
     body_data["is_pdf"] = False
 
@@ -104,6 +106,7 @@ def build_web_html(yaml_file: str, output_dir: str | None = None) -> None:
         css_content=css_content,
         html_body=html_body,
         linkedin_url=linkedin_url,
+        github_url=github_url,
         pdf_url=pdf_url,
         email=email,
     )
