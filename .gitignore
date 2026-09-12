@@ -11,4 +11,5 @@ htmlcov/
 dist/
 .beads/
 .env.local
+node_modules/
 /.beads.gate.lock

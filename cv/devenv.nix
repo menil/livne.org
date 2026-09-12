@@ -10,6 +10,7 @@
     fontconfig
     liberation_ttf
     pandoc
+    bun
     ruff
     shellcheck
     shfmt
@@ -25,6 +26,9 @@
       .venv/bin/pip install -e . -q
     fi
     source .venv/bin/activate
+    if [ ! -d node_modules ]; then
+      bun install
+    fi
   '';
 
   languages.python = {

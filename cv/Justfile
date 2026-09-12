@@ -2,19 +2,23 @@
 lint:
     ruff check .
     shellcheck ../.githooks/commit-msg
+    bun run lint
 
 # ─── Format ─────────────────────────────────────────────────
 format:
     ruff format .
     shfmt -w ../.githooks/commit-msg .envrc
+    bun run format
 
 check-format:
     ruff format --check .
     shfmt -d ../.githooks/commit-msg .envrc
+    bun run check-format
 
 # ─── Test (unit + integration) ──────────────────────────────
 test:
     python -m pytest tests/ -v --cov --cov-config=.coveragerc
+    bun test
 
 # ─── Resume schema validation ────────────────────────────────
 validate-resume:
@@ -37,6 +41,7 @@ build: export-yaml
 # ─── Type check ─────────────────────────────────────────────
 typecheck:
     mypy src/
+    bun run typecheck
 
 # ─── Validate (lint + check format + schema + types + tests) ─
 validate: lint check-format validate-resume typecheck test
