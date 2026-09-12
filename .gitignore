@@ -11,3 +11,4 @@ htmlcov/
 dist/
 .beads/
 .env.local
+/.beads.gate.lock
