@@ -37,7 +37,8 @@ export-json: validate-resume
 # ─── Build Modular Targets ──────────────────────────────────
 build-yaml: export-yaml
 
-build-json: export-json
+build-theme:
+    bun run build:theme
 
 build-html: export-json
     mkdir -p dist
@@ -57,7 +58,7 @@ build-md: export-json
     ./src/md/render_md.py dist/resume.json dist/cv.md
 
 # ─── Build All Artifacts ────────────────────────────────────
-build: export-yaml export-json build-html build-pdf build-docx build-md
+build: export-yaml export-json build-theme build-html build-pdf build-docx build-md
 
 # ─── Type check ─────────────────────────────────────────────
 typecheck:

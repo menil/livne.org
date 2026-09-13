@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import Handlebars from "handlebars";
 import { prepareResume, registerHelpers } from "./helpers.ts";
 import type { ResumeData, ThemeOptions } from "./types.ts";
@@ -60,7 +61,12 @@ export function buildHtml(
 }
 
 // CLI usage: bun theme/index.ts <input.json> [output.html]
-if (import.meta.main) {
+const isCliEntrypoint =
+  typeof process !== "undefined" &&
+  process.argv[1] !== undefined &&
+  fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isCliEntrypoint) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
     console.error("Usage: bun theme/index.ts <input.json> [output.html]");
