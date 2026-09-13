@@ -10,6 +10,7 @@ career" entries.
 
 from __future__ import annotations
 
+import json
 from datetime import date
 from typing import Any, cast
 
@@ -126,14 +127,19 @@ def prepare(data: dict[str, Any], as_of: date | None = None) -> dict[str, Any]:
     }
 
 
-def load_data(yaml_file: str) -> dict[str, Any]:
-    """Load a JSON Resume YAML file and render its PII placeholders."""
-    config = load_config(yaml_file)
-    with open(yaml_file, encoding="utf-8") as f:
-        yaml_content = f.read()
-    return cast("dict[str, Any]", yaml.safe_load(apply_config(yaml_content, config)))
+def load_data(file_path: str) -> dict[str, Any]:
+    """Load a JSON Resume YAML or JSON file and render its PII placeholders."""
+    config = load_config(file_path)
+    with open(file_path, encoding="utf-8") as f:
+        content = f.read()
+    rendered = apply_config(content, config)
+    if file_path.endswith(".json"):
+        return cast("dict[str, Any]", json.loads(rendered))
+    if file_path.endswith((".yaml", ".yml")):
+        return cast("dict[str, Any]", yaml.safe_load(rendered))
+    raise ValueError(f"Unsupported file format for '{file_path}'. Expected .json, .yaml, or .yml.")
 
 
-def load_resume(yaml_file: str, as_of: date | None = None) -> dict[str, Any]:
-    """Load, render placeholders, and prepare a JSON Resume YAML file."""
-    return prepare(load_data(yaml_file), as_of=as_of)
+def load_resume(file_path: str, as_of: date | None = None) -> dict[str, Any]:
+    """Load, render placeholders, and prepare a JSON Resume YAML or JSON file."""
+    return prepare(load_data(file_path), as_of=as_of)

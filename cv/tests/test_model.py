@@ -166,3 +166,33 @@ def test_load_resume_prepares(tmp_path, monkeypatch):
     prepared = resume_model.load_resume(str(yaml_file), as_of=PINNED)
     assert prepared["basics"]["name"] == "Jane Doe"
     assert prepared["work"][0]["roles"][0]["dates"] == "2020-Present"
+
+
+def test_load_json_data_and_resume(tmp_path):
+    import json
+
+    json_file = tmp_path / "resume.json"
+    json_file.write_text(
+        json.dumps(
+            {
+                "basics": {"name": "Jane Doe", "email": "jane.doe@example.com"},
+                "work": [{"name": "Co", "position": "Dev", "startDate": "2020"}],
+            }
+        )
+    )
+    data = resume_model.load_data(str(json_file))
+    assert data["basics"]["name"] == "Jane Doe"
+
+    prepared = resume_model.load_resume(str(json_file), as_of=PINNED)
+    assert prepared["basics"]["name"] == "Jane Doe"
+    assert prepared["work"][0]["roles"][0]["dates"] == "2020-Present"
+
+
+def test_load_data_unsupported_format(tmp_path):
+    import pytest
+
+    unsupported_file = tmp_path / "resume.txt"
+    unsupported_file.write_text("plain text")
+
+    with pytest.raises(ValueError, match="Unsupported file format"):
+        resume_model.load_data(str(unsupported_file))

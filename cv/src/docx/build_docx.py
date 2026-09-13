@@ -70,18 +70,18 @@ def _format_job_title(paragraph: Paragraph) -> None:
     paragraph.paragraph_format.space_after = Pt(1)
 
 
-def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
-    if not os.path.exists(yaml_file):
-        print(f"Error: {yaml_file} not found.")
+def build_styled_docx(input_file: str, output_dir: str | None = None) -> None:
+    if not os.path.exists(input_file):
+        print(f"Error: {input_file} not found.")
         return
 
-    # 1. Load YAML, render placeholders, and prepare the resume model
-    data = resume_model.load_resume(yaml_file)
+    # 1. Load JSON/YAML, render placeholders, and prepare the resume model
+    data = resume_model.load_resume(input_file)
 
     # 2. Derive output paths
     name = data["basics"].get("name", "")
     email = data["basics"].get("email", "")
-    final_output = config_output_path(yaml_file, {"name": name}, "docx", output_dir=output_dir)
+    final_output = config_output_path(input_file, {"name": name}, "docx", output_dir=output_dir)
     base_output = final_output.replace(".docx", "_base.docx")
 
     # 3. Render clean Markdown string in memory
@@ -147,7 +147,7 @@ def build_styled_docx(yaml_file: str, output_dir: str | None = None) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python build_docx.py <input.yaml>")
+        print("Usage: python build_docx.py <input.json|input.yaml>")
         sys.exit(1)
     _project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     _dist_dir = os.path.join(_project_root, "dist")

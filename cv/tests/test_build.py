@@ -356,6 +356,54 @@ def test_render_markdown(tmp_path):
     assert "Company Name" in content
 
 
+def test_render_markdown_from_json(tmp_path):
+    import json
+
+    json_file = tmp_path / "resume.json"
+    json_file.write_text(
+        json.dumps(
+            {
+                "basics": {
+                    "name": "Jane Doe",
+                    "email": "jane.doe@example.com",
+                    "location": {"city": "Seattle", "region": "WA"},
+                },
+                "work": [{"name": "Acme", "position": "Lead", "startDate": "2020"}],
+                "skills": [],
+                "education": [],
+            }
+        )
+    )
+    output_md = tmp_path / "output.md"
+    render_markdown(str(json_file), str(output_md))
+    assert output_md.exists()
+    content = output_md.read_text()
+    assert "Jane Doe" in content
+    assert "Acme" in content
+
+
+def test_build_styled_docx_from_json(tmp_path):
+    import json
+
+    json_file = tmp_path / "resume.json"
+    json_file.write_text(
+        json.dumps(
+            {
+                "basics": {
+                    "name": "Jane Doe",
+                    "email": "jane.doe@example.com",
+                    "location": {"city": "Seattle", "region": "WA"},
+                },
+                "work": [{"name": "Acme", "position": "Lead", "startDate": "2020"}],
+                "skills": [],
+                "education": [],
+            }
+        )
+    )
+    build_docx.build_styled_docx(str(json_file), output_dir=str(tmp_path))
+    assert (tmp_path / "jane_doe_resume.docx").exists()
+
+
 def test_cli_no_args_md():
     result = subprocess.run(
         [sys.executable, "src/md/render_md.py"],
