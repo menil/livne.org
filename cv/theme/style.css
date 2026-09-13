@@ -201,3 +201,145 @@ li {
     padding-bottom: 0;
   }
 }
+
+@page {
+  size: Letter;
+  margin: 18mm 18mm;
+  background-color: #fafbfd;
+}
+
+@media print {
+  body {
+    font-family: "Liberation Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    background-color: #fafbfd !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    margin: 0;
+    padding: 0;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+
+  .resume-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    font-size: 10.5pt;
+  }
+
+  .action-links {
+    display: none !important;
+  }
+
+  h1 {
+    font-size: 26pt;
+    margin: 0 0 6px 0;
+  }
+
+  h1 + p {
+    font-size: 10.5pt;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e0e6ed;
+  }
+
+  h1 + p + p {
+    font-size: 10.5pt;
+    margin-bottom: 18px;
+    padding: 0 5px;
+  }
+
+  h2 {
+    font-size: 13.5pt;
+    margin-top: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+  }
+
+  .company-header {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .company-header.page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .company-name {
+    font-size: 12.5pt;
+    font-weight: bold;
+    color: #1a252f;
+  }
+
+  .company-desc {
+    font-size: 9.5pt;
+    margin-top: 2px;
+  }
+
+  .role-header {
+    margin-top: 6px;
+    margin-bottom: 3px;
+    break-after: avoid;
+    page-break-after: avoid;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .role-title {
+    font-size: 11pt;
+    font-weight: bold;
+  }
+
+  .role-date {
+    font-size: 10.5pt;
+    font-weight: bold;
+  }
+
+  ul {
+    margin-top: 4px;
+    margin-bottom: 12px;
+    padding-left: 18px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  .skills-table {
+    margin-top: 6px;
+    margin-bottom: 18px;
+  }
+
+  .skills-table td {
+    padding: 5px 0;
+  }
+
+  .skill-cat {
+    width: 25%;
+  }
+
+  .skill-list {
+    width: 75%;
+  }
+
+  .early-career td {
+    padding: 3px 0;
+  }
+
+  .education {
+    font-size: 11pt;
+    padding-bottom: 15px;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
