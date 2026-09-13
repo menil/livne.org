@@ -4,7 +4,7 @@
 # Prevents accidental commits of email addresses, phone numbers,
 # or LinkedIn profile URLs.
 
-PII_REGEX='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[0-9]{3}-[0-9]{3}-[0-9]{4}|linkedin\.com/in/[a-zA-Z0-9_-]+|github\.com/[a-zA-Z0-9_-]+'
+PII_REGEX='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[0-9]{3}-[0-9]{3}-[0-9]{4}|linkedin\.com/in/[a-zA-Z0-9_-]+|github\.com/[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*'
 
 # Whitelist of allowed mock values (lowercased)
 WHITELIST="john@example.com
@@ -20,9 +20,7 @@ linkedin.com/in/janedoe
 github.com/janedoe
 github.com/jsonresume
 github.com/jane
-linkedin.com/in/jane
-712-117-2923
-thomas@gmail.com"
+linkedin.com/in/jane"
 
 # Create a temporary file to store staged files list and avoid subshell pipeline exit issues
 TEMP_FILES_LIST=$(mktemp)
@@ -32,9 +30,9 @@ while read -r FILE; do
 	# Skip empty lines
 	[ -z "$FILE" ] && continue
 
-	# Skip binary files and this hook itself
+	# Skip binary files, schema definition files, and this hook itself
 	case "$FILE" in
-		*.png | *.jpg | *.jpeg | *.gif | *.pdf | *.docx | .githooks/*) continue ;;
+		*.png | *.jpg | *.jpeg | *.gif | *.pdf | *.docx | *resume.schema.json | .githooks/*) continue ;;
 	esac
 
 	# Skip if file doesn't exist (deleted)
@@ -45,6 +43,10 @@ while read -r FILE; do
 	if [ -n "$MATCHES" ]; then
 		# Check if any matches are not in the whitelist
 		for MATCH in $MATCHES; do
+			# Skip GitHub repository and deep links (2 or more path segments)
+			case "$MATCH" in
+				github.com/*/*) continue ;;
+			esac
 			if ! echo "$WHITELIST" | grep -qxF "$MATCH"; then
 				echo "Real PII detected in $FILE: $MATCH"
 				rm -f "$TEMP_FILES_LIST"

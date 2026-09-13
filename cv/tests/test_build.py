@@ -8,10 +8,8 @@ from docx.shared import Pt, RGBColor
 from docx import Document
 from src.common import ENV_KEYS, config_output_path
 from src.docx import build_docx
-from src.html import build_html
 from src.md.render_md import render_markdown
-from src.pdf import build_pdf
-from tests.conftest import DEFAULT_CONFIG, DUMMY_EMAIL, DUMMY_NAME, SAMPLE_YAML
+from tests.conftest import DEFAULT_CONFIG, DUMMY_NAME, SAMPLE_YAML
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 
@@ -174,60 +172,6 @@ def _write_minimal_yaml(path):
     )
 
 
-def _write_minimal_yaml_public(path):
-    path.write_text(
-        "basics:\n"
-        "  name: '{{ name }}'\n"
-        "  email: '{{ email }}'\n"
-        "  phone: '{{ phone }}'\n"
-        "  summary: Summary.\n"
-        "  location:\n"
-        "    city: City\n"
-        "    region: Region\n"
-        "work: []\n"
-        "early_career: []\n"
-        "skills: []\n"
-        "education: []"
-    )
-
-
-def test_build_flawless_pdf_happy_path(tmp_path):
-    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
-    yaml_file = tmp_path / "test.yaml"
-    yaml_file.write_text(SAMPLE_YAML)
-    build_pdf.build_flawless_pdf(str(yaml_file))
-    pdf_file = tmp_path / "john_doe_resume.pdf"
-    assert pdf_file.exists()
-    assert pdf_file.stat().st_size > 100
-    assert pdf_file.read_bytes()[:4] == b"%PDF"
-
-
-def test_build_flawless_pdf_missing_file(tmp_path, capsys):
-    missing = tmp_path / "nonexistent.yaml"
-    build_pdf.build_flawless_pdf(str(missing))
-    captured = capsys.readouterr()
-    assert "not found" in captured.out
-
-
-def test_build_flawless_pdf_with_config(tmp_path):
-    _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
-    yaml_file = tmp_path / "cv.yaml"
-    _write_minimal_yaml(yaml_file)
-    build_pdf.build_flawless_pdf(str(yaml_file))
-    assert (tmp_path / "jane_doe_resume.pdf").exists()
-
-
-def test_build_flawless_pdf_public(tmp_path):
-    cfg = {"name": "Jane Doe", "email": "j@e.co", "phone": "555-0000"}
-    _write_env(tmp_path / ".env.local", cfg)
-    yaml_file = tmp_path / "cv.yaml"
-    _write_minimal_yaml_public(yaml_file)
-    build_pdf.build_flawless_pdf(str(yaml_file), public=True)
-    assert (tmp_path / "jane_doe_resume_public.pdf").exists()
-    size_public = (tmp_path / "jane_doe_resume_public.pdf").stat().st_size
-    assert size_public > 100
-
-
 # ─── build_styled_docx happy path ─────────────────────────────
 
 
@@ -257,70 +201,12 @@ def test_build_styled_docx_with_config(tmp_path):
     assert (tmp_path / "jane_doe_resume.docx").exists()
 
 
-# ─── build_web_html happy path ────────────────────────────────
-
-
-def test_build_html_happy_path(tmp_path):
-    _write_env(tmp_path / ".env.local", DEFAULT_CONFIG)
-    yaml_file = tmp_path / "test.yaml"
-    yaml_file.write_text(SAMPLE_YAML)
-    build_html.build_web_html(str(yaml_file))
-    html_file = tmp_path / "john_doe_resume.html"
-    assert html_file.exists()
-    assert html_file.stat().st_size > 100
-    content = html_file.read_text()
-    assert "<!DOCTYPE html>" in content
-    assert DUMMY_NAME in content
-    assert f'href="mailto:{DUMMY_EMAIL}"' in content
-    assert "john_doe_resume.pdf" in content
-
-
-def test_build_html_missing_file(tmp_path, capsys):
-    missing = tmp_path / "nonexistent.yaml"
-    build_html.build_web_html(str(missing))
-    captured = capsys.readouterr()
-    assert "not found" in captured.out
-
-
-def test_build_html_with_config(tmp_path):
-    _write_env(tmp_path / ".env.local", {"name": "Jane Doe", "email": "j@e.co"})
-    yaml_file = tmp_path / "cv.yaml"
-    _write_minimal_yaml(yaml_file)
-    build_html.build_web_html(str(yaml_file))
-    html_file = tmp_path / "jane_doe_resume.html"
-    assert html_file.exists()
-    content = html_file.read_text()
-    assert "Jane Doe" in content
-
-
 # ─── CLI entry points ─────────────────────────────────────────
-
-
-def test_cli_no_args_pdf():
-    result = subprocess.run(
-        [sys.executable, "src/pdf/build_pdf.py"],
-        capture_output=True,
-        text=True,
-        cwd=SCRIPT_DIR,
-    )
-    assert result.returncode == 1
-    assert "Usage:" in result.stdout
 
 
 def test_cli_no_args_docx():
     result = subprocess.run(
         [sys.executable, "src/docx/build_docx.py"],
-        capture_output=True,
-        text=True,
-        cwd=SCRIPT_DIR,
-    )
-    assert result.returncode == 1
-    assert "Usage:" in result.stdout
-
-
-def test_cli_no_args_html():
-    result = subprocess.run(
-        [sys.executable, "src/html/build_html.py"],
         capture_output=True,
         text=True,
         cwd=SCRIPT_DIR,

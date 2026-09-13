@@ -8,8 +8,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "check-format": "biome format ."
+    "check-format": "biome format .",
+    "build:html": "bun theme/index.ts",
+    "build:pdf": "bun src/pdf/build_pdf.ts"
   },
+  "trustedDependencies": ["@biomejs/biome"],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.3.13",

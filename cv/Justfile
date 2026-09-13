@@ -34,14 +34,30 @@ export-json: validate-resume
     python -m src.export_json resources/cv.yaml dist/resume.json
     python -m src.export_json resources/cv.yaml dist/resume_public.json --public
 
-# ─── Build (PDF + DOCX) ─────────────────────────────────────
-build: export-yaml export-json
+# ─── Build Modular Targets ──────────────────────────────────
+build-yaml: export-yaml
+
+build-json: export-json
+
+build-html: export-json
     mkdir -p dist
-    ./src/md/render_md.py resources/cv.yaml dist/cv.md
-    ./src/pdf/build_pdf.py resources/cv.yaml            # recruiter
-    ./src/pdf/build_pdf.py resources/cv.yaml --public   # public
-    ./src/docx/build_docx.py resources/cv.yaml
-    ./src/html/build_html.py resources/cv.yaml
+    bun theme/index.ts dist/resume_public.json
+
+build-pdf: export-json
+    mkdir -p dist
+    bun src/pdf/build_pdf.ts dist/resume.json
+    bun src/pdf/build_pdf.ts --public dist/resume_public.json
+
+build-docx: export-json
+    mkdir -p dist
+    ./src/docx/build_docx.py dist/resume.json
+
+build-md: export-json
+    mkdir -p dist
+    ./src/md/render_md.py dist/resume.json dist/cv.md
+
+# ─── Build All Artifacts ────────────────────────────────────
+build: export-yaml export-json build-html build-pdf build-docx build-md
 
 # ─── Type check ─────────────────────────────────────────────
 typecheck:

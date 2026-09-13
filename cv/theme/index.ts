@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import Handlebars from "handlebars";
 import { prepareResume, registerHelpers } from "./helpers.ts";
@@ -34,6 +34,31 @@ export function render(resume: ResumeData = {}, options: ThemeOptions = {}): str
   });
 }
 
+/**
+ * Builds an HTML file from a JSON Resume file.
+ */
+export function buildHtml(
+  inputJsonPath: string,
+  outputPath?: string,
+  options: ThemeOptions = {},
+): string {
+  const raw = readFileSync(inputJsonPath, "utf-8");
+  const data: ResumeData = JSON.parse(raw);
+
+  let targetPath = outputPath;
+  if (!targetPath) {
+    const name = data.basics?.name || "resume";
+    // Replace non-alphanumeric characters (except hyphen and underscore) with underscore for safe filename generation
+    const slug = name.toLowerCase().replace(/[^a-z0-9_-]+/g, "_");
+    targetPath = join(dirname(inputJsonPath), `${slug}_resume.html`);
+  }
+
+  mkdirSync(dirname(targetPath), { recursive: true });
+  const html = render(data, options);
+  writeFileSync(targetPath, html, "utf-8");
+  return targetPath;
+}
+
 // CLI usage: bun theme/index.ts <input.json> [output.html]
 if (import.meta.main) {
   const args = process.argv.slice(2);
@@ -45,17 +70,11 @@ if (import.meta.main) {
   const inputFile = args[0];
   const outputFile = args[1];
 
-  const rawJson = readFileSync(inputFile, "utf-8");
-  const data = JSON.parse(rawJson);
-  const html = render(data);
-
-  if (outputFile) {
-    const { writeFileSync, mkdirSync } = require("node:fs");
-    const { dirname } = require("node:path");
-    mkdirSync(dirname(outputFile), { recursive: true });
-    writeFileSync(outputFile, html, "utf-8");
-    console.log(`Generated HTML resume: ${outputFile}`);
-  } else {
-    process.stdout.write(html);
+  try {
+    const createdPath = buildHtml(inputFile, outputFile);
+    console.log(`Success! Created ${createdPath}`);
+  } catch (err) {
+    console.error("Error generating HTML:", err);
+    process.exit(1);
   }
 }
