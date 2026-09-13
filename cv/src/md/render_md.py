@@ -12,10 +12,13 @@ from src import resume_model
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def render_markdown(yaml_file: str, output_file: str) -> None:
-    """Read *yaml_file*, resolve PII variables, render MD from template, write to *output_file*."""
-    # 1. Load YAML, render placeholders, and prepare the resume model
-    data = resume_model.load_resume(yaml_file)
+def render_markdown(input_file: str, output_file: str) -> None:
+    """Read *input_file* (JSON or YAML), render MD from template.
+
+    Write rendered markdown to *output_file*.
+    """
+    # 1. Load JSON/YAML, render placeholders, and prepare the resume model
+    data = resume_model.load_resume(input_file)
 
     # 2. Load Markdown template
     tpl_path = os.path.join(_SCRIPT_DIR, "template.md")
@@ -36,6 +39,6 @@ def render_markdown(yaml_file: str, output_file: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: render_md.py <input.yaml> <output.md>")
+        print("Usage: render_md.py <input.json|input.yaml> <output.md>")
         sys.exit(1)
     render_markdown(sys.argv[1], sys.argv[2])
