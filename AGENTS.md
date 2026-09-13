@@ -3,12 +3,14 @@
 ## Project structure
 
 - `cv/` — Resume source files. See [`cv/README.md`](cv/README.md) for usage.
-  - `src/pdf/build_pdf.py` — Main script: reads YAML database, generates a two-page PDF resume via WeasyPrint.
-  - `src/docx/build_docx.py` — Script to generate a styled DOCX from YAML database.
-  - `src/html/build_html.py` — Script to generate a styled HTML resume from YAML database.
-  - `src/md/render_md.py` — Script to generate a styled Markdown resume from YAML database.
+  - `theme/` — JSON Resume Handlebars HTML theme and renderer (`theme/index.ts`).
+  - `src/pdf/build_pdf.ts` — Headless Chromium Puppeteer script: generates two-page PDF resumes from JSON Resume data.
+  - `src/docx/build_docx.py` — Script to generate a styled DOCX from JSON Resume / YAML database.
+  - `src/md/render_md.py` — Script to generate a styled Markdown resume from JSON Resume / YAML database.
+  - `src/export_json.py` — Script to resolve PII and export JSON Resume databases.
+  - `src/export_yaml.py` — Script to resolve PII and export YAML resume databases.
   - `resources/cv.yaml` — Resume database in YAML.
-  - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs + Python deps).
+  - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs, Bun, + Python deps).
   - `.envrc` — direnv auto-activation.
 - Root `.gitignore` — standard ignores for generated/cache files.
 

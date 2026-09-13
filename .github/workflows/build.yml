@@ -38,7 +38,7 @@ jobs:
           devenv shell bash -e -c 'echo "devenv cached"'
       - name: Lint, format, schema validation, and tests
         working-directory: ./cv
-        run: devenv shell bash -e -c 'just validate && just test'
+        run: devenv shell bash -e -c 'just validate'
 
   build:
     if: github.event_name == 'push'

@@ -2,11 +2,6 @@
 
 {
   packages = with pkgs; [
-    pango
-    glib
-    cairo
-    gdk-pixbuf
-    libffi
     fontconfig
     liberation_ttf
     pandoc
@@ -28,13 +23,13 @@
     source .venv/bin/activate
     if [ ! -d node_modules ]; then
       bun install
+      bun x puppeteer browsers install chrome
     fi
   '';
 
   languages.python = {
     enable = true;
     package = pkgs.python3.withPackages (ps: with ps; [
-      weasyprint
       markdown
       jinja2
       pypandoc

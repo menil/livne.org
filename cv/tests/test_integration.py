@@ -28,38 +28,6 @@ def _check_file(path: Path, magic: bytes, label: str) -> None:
     assert path.read_bytes()[: len(magic)] == magic, f"{label} wrong magic bytes"
 
 
-def test_build_pdf():
-    with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
-        tmp = Path(tmp)
-        _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
-        result = subprocess.run(
-            [sys.executable, "src/pdf/build_pdf.py", str(tmp / "test.yaml")],
-            capture_output=True,
-            text=True,
-            cwd=SCRIPT_DIR,
-        )
-        assert result.returncode == 0, f"build_pdf.py failed: {result.stderr}"
-        _check_file(DIST_DIR / "john_doe_resume.pdf", b"%PDF", "PDF")
-        (DIST_DIR / "john_doe_resume.pdf").unlink()
-
-
-def test_build_pdf_public():
-    with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
-        tmp = Path(tmp)
-        _write_env(tmp / ".env.local", DEFAULT_CONFIG)
-        (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
-        result = subprocess.run(
-            [sys.executable, "src/pdf/build_pdf.py", "--public", str(tmp / "test.yaml")],
-            capture_output=True,
-            text=True,
-            cwd=SCRIPT_DIR,
-        )
-        assert result.returncode == 0, f"build_pdf.py --public failed: {result.stderr}"
-        _check_file(DIST_DIR / "john_doe_resume_public.pdf", b"%PDF", "PDF-public")
-        (DIST_DIR / "john_doe_resume_public.pdf").unlink()
-
-
 def test_build_docx():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
@@ -76,20 +44,19 @@ def test_build_docx():
         (DIST_DIR / "john_doe_resume.docx").unlink()
 
 
-def test_build_html():
+def test_render_md():
     with tempfile.TemporaryDirectory(prefix="cv_test_") as tmp:
         tmp = Path(tmp)
         _write_env(tmp / ".env.local", DEFAULT_CONFIG)
         (tmp / "test.yaml").write_text(SAMPLE_YAML_INTEGRATION)
+        md_path = DIST_DIR / "cv.md"
         result = subprocess.run(
-            [sys.executable, "src/html/build_html.py", str(tmp / "test.yaml")],
+            [sys.executable, "src/md/render_md.py", str(tmp / "test.yaml"), str(md_path)],
             capture_output=True,
             text=True,
             cwd=SCRIPT_DIR,
         )
-        assert result.returncode == 0, f"build_html.py failed: {result.stderr}"
-        html_path = DIST_DIR / "john_doe_resume.html"
-        assert html_path.exists(), "HTML output not found"
-        assert html_path.stat().st_size > 100, "HTML output too small"
-        assert "<!DOCTYPE html>" in html_path.read_text()
-        html_path.unlink()
+        assert result.returncode == 0, f"render_md.py failed: {result.stderr}"
+        assert md_path.exists()
+        assert md_path.stat().st_size > 100
+        md_path.unlink()
