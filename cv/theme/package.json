@@ -1,0 +1,14 @@
+{
+  "name": "jsonresume-theme-signal",
+  "version": "1.0.0",
+  "description": "High-signal, print-ready JSON Resume theme with multi-role company grouping and career partitioning",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "files": ["index.js", "index.d.ts", "template.hbs", "style.css"],
+  "keywords": ["jsonresume", "jsonresume-theme"],
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}

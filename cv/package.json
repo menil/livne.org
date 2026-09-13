@@ -10,7 +10,8 @@
     "format": "biome format --write .",
     "check-format": "biome format .",
     "build:html": "bun theme/index.ts",
-    "build:pdf": "bun src/pdf/build_pdf.ts"
+    "build:pdf": "bun src/pdf/build_pdf.ts",
+    "build:theme": "bun build theme/index.ts --outfile theme/index.js --target node --format esm --packages=bundle"
   },
   "trustedDependencies": ["@biomejs/biome"],
   "devDependencies": {
