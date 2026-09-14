@@ -158,7 +158,7 @@
 
     "json-parse-even-better-errors": ["json-parse-even-better-errors@2.3.1", "", {}, "sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w=="],
 
-    "jsonresume-theme-signal": ["jsonresume-theme-signal@github:menil/jsonresume-theme-signal#197f6b6", { "dependencies": { "handlebars": "^4.7.8" } }, "menil-jsonresume-theme-signal-197f6b6", "sha512-y/HBUBOZGBHrEyRilsExVgcFBLtHZJR15z+tSxn//6hONREjLUdJJuqj1FslgHgG0YKDx9GyXU/NT6JSAcXQSQ=="],
+    "jsonresume-theme-signal": ["jsonresume-theme-signal@github:menil/jsonresume-theme-signal#4474bec", { "dependencies": { "handlebars": "^4.7.8" } }, "menil-jsonresume-theme-signal-4474bec", "sha512-hXbnD7LeYM5oKB21xcHbWMDo6tesMQh3cZa0Xjym1/hcFE5kfyullqDKeJpBkfW7idzsZTMfXqPHiI139SLPnA=="],
 
     "jsonschema": ["jsonschema@1.5.0", "", {}, "sha512-K+A9hhqbn0f3pJX17Q/7H6yQfD/5OXgdrR5UE12gMXCiN9D5Xq2o5mddV2QEcX/bjla99ASsAAQUyMCCRWAEhw=="],
 
