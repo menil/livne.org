@@ -9,11 +9,13 @@
     "lint": "biome check .",
     "format": "biome format --write .",
     "check-format": "biome format .",
-    "build:html": "bun theme/index.ts",
-    "build:pdf": "bun src/pdf/build_pdf.ts",
-    "build:theme": "bun build theme/index.ts --outfile theme/index.js --target node --format esm --packages=bundle"
+    "build:html": "resumed render dist/resume_public.json -o dist/resume_public.html -t jsonresume-theme-signal",
+    "build:pdf": "resumed export dist/resume.json -o dist/resume.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox && resumed export dist/resume_public.json -o dist/resume_public.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox"
   },
   "trustedDependencies": ["@biomejs/biome"],
+  "dependencies": {
+    "jsonresume-theme-signal": "github:menil/jsonresume-theme-signal#main"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.3.13",

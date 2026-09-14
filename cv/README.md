@@ -29,9 +29,9 @@ Builds a polished PDF, DOCX, HTML, and Markdown resume from a single structured 
         |                       |                       |
         v                       v                       v
 +---------------+       +---------------+       +---------------+
-| cv/theme/     |       | src/pdf/      |       | src/docx/ &   |
-| (Handlebars   |       | build_pdf.ts  |       | src/md/       |
-| HTML Theme)   |       | (Puppeteer)   |       | (DOCX & MD)   |
+| resumed       |       | resumed       |       | src/docx/ &   |
+| render        |       | export        |       | src/md/       |
+| (-t signal)   |       | (-t signal)   |       | (DOCX & MD)   |
 +-------+-------+       +-------+-------+       +-------+-------+
         |                       |                       |
         v                       v                       v
@@ -105,15 +105,7 @@ All commands run inside `devenv shell`:
 ```
 cv/
 ├── dist/                # Generated resume outputs
-├── theme/               # JSON Resume Handlebars theme
-│   ├── template.hbs     # Handlebars resume template
-│   ├── style.css        # Theme stylesheet
-│   ├── helpers.ts       # Template helpers & data transformation
-│   ├── types.ts         # TypeScript JSON Resume definitions
-│   └── index.ts         # Theme entrypoint & HTML builder
 ├── src/
-│   ├── pdf/
-│   │   └── build_pdf.ts     # Headless Chromium Puppeteer PDF builder
 │   ├── docx/
 │   │   └── build_docx.py    # python-docx DOCX builder
 │   ├── md/
@@ -126,9 +118,7 @@ cv/
 ├── resources/
 │   └── cv.yaml          # Resume structured database source
 ├── tests/
-│   ├── helpers.test.ts  # Theme helper unit tests
-│   ├── pdf.test.ts      # Puppeteer PDF builder tests
-│   ├── theme.test.ts    # Handlebars theme tests
+│   ├── resumed.test.ts  # Resumed CLI integration tests (HTML & PDF)
 │   ├── test_build.py    # Python build unit tests
 │   ├── test_model.py    # Resume model tests
 │   └── test_validate.py # Schema validation tests
