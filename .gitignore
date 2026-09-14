@@ -12,5 +12,4 @@ dist/
 .beads/
 .env.local
 node_modules/
-**/theme/index.js
 /.beads.gate.lock

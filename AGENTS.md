@@ -3,8 +3,6 @@
 ## Project structure
 
 - `cv/` — Resume source files. See [`cv/README.md`](cv/README.md) for usage.
-  - `theme/` — JSON Resume Handlebars HTML theme and renderer (`theme/index.ts`).
-  - `src/pdf/build_pdf.ts` — Headless Chromium Puppeteer script: generates two-page PDF resumes from JSON Resume data.
   - `src/docx/build_docx.py` — Script to generate a styled DOCX from JSON Resume / YAML database.
   - `src/md/render_md.py` — Script to generate a styled Markdown resume from JSON Resume / YAML database.
   - `src/export_json.py` — Script to resolve PII and export JSON Resume databases.
