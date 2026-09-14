@@ -1,5 +1,6 @@
 basics:
   name: "{{ name }}"
+  label: Principal Software Engineer
   email: "{{ email }}"
   phone: "{{ phone }}"
   summary: >
