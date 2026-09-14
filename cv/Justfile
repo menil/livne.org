@@ -39,12 +39,12 @@ build-yaml: export-yaml
 
 build-html: export-json
     mkdir -p dist
-    bun run --bun resumed render dist/resume_public.json -o dist/resume_public.html -t jsonresume-theme-signal
+    bun run --bun resumed render dist/resume_public.json -o dist/$(python -m src.common dist/resume_public.json)_resume.html -t jsonresume-theme-signal
 
 build-pdf: export-json
     mkdir -p dist
-    bun run --bun resumed export dist/resume.json -o dist/resume.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox
-    bun run --bun resumed export dist/resume_public.json -o dist/resume_public.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox
+    bun run --bun resumed export dist/resume.json -o dist/$(python -m src.common dist/resume.json)_resume.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox
+    bun run --bun resumed export dist/resume_public.json -o dist/$(python -m src.common dist/resume_public.json)_resume_public.pdf -t jsonresume-theme-signal --puppeteer-arg=--no-sandbox --puppeteer-arg=--disable-setuid-sandbox
 
 build-docx: export-json
     mkdir -p dist
