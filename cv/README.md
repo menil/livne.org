@@ -3,13 +3,12 @@
 [![CI](https://github.com/menil/livne.org/actions/workflows/build.yml/badge.svg)](https://github.com/menil/livne.org/actions/workflows/build.yml)
 [![Python](https://img.shields.io/badge/python-3.13-blue?logo=python)](https://www.python.org)
 [![Bun](https://img.shields.io/badge/bun-1.3-black?logo=bun)](https://bun.sh)
-[![TypeScript](https://img.shields.io/badge/typescript-5.7-blue?logo=typescript)](https://www.typescriptlang.org)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000)](https://docs.astral.sh/ruff)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen)](.coveragerc)
 [![License](https://img.shields.io/github/license/menil/livne.org)](../LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/menil/livne.org)](https://github.com/menil/livne.org/commits/main)
 
-Builds a polished PDF, DOCX, HTML, and Markdown resume from a single structured YAML database using JSON Resume schemas, TypeScript theme, Puppeteer, Pandoc, and Jinja2.
+Builds a polished PDF, DOCX, HTML, and Markdown resume from a single structured YAML database using JSON Resume schemas, Signal theme, Puppeteer, Pandoc, and Jinja2.
 
 ## Pipeline Flow
 
@@ -95,8 +94,8 @@ All commands run inside `devenv shell`:
 | `just lint` | Ruff lint + shellcheck + Biome lint |
 | `just format` | Ruff format + shfmt + Biome format |
 | `just check-format` | Check formatting without changes |
-| `just typecheck` | mypy strict mode on `src/` + `tsc --noEmit` |
-| `just test` | pytest + coverage (threshold: 90%) + `bun test` |
+| `just typecheck` | mypy strict mode on `src/` |
+| `just test` | pytest + coverage (threshold: 90%) |
 | `just build` | Generate all JSON Resume artifacts under `dist/` |
 | `just validate` | Run lint + format-check + schema + typecheck + test |
 
@@ -118,12 +117,12 @@ cv/
 ├── resources/
 │   └── cv.yaml          # Resume structured database source
 ├── tests/
-│   ├── resumed.test.ts  # Resumed CLI integration tests (HTML & PDF)
 │   ├── test_build.py    # Python build unit tests
 │   ├── test_model.py    # Resume model tests
+│   ├── test_resumed.py  # Resumed CLI integration tests (HTML & PDF)
 │   └── test_validate.py # Schema validation tests
 ├── devenv.nix / .yaml / .lock
-├── package.json / tsconfig.json / biome.json
+├── package.json / biome.json
 ├── mypy.ini / ruff.toml / .coveragerc
 ├── Justfile / .envrc / README.md
 ```
