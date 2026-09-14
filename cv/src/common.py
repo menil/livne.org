@@ -90,3 +90,27 @@ def config_output_path(
     if output_dir is not None:
         return os.path.join(output_dir, filename)
     return os.path.join(os.path.dirname(md_file), filename)
+
+
+def get_resume_slug(json_file: str = "dist/resume.json") -> str:
+    """Derive sanitized lowercase slug from a JSON Resume file's basics.name."""
+    import json
+    import re
+
+    if not os.path.exists(json_file):
+        return "resume"
+    try:
+        with open(json_file, encoding="utf-8") as f:
+            data = json.load(f)
+        name = data.get("basics", {}).get("name", "resume")
+        slug = re.sub(r"[^a-z0-9_-]+", "_", name.lower()).strip("_")
+        return slug or "resume"
+    except Exception:
+        return "resume"
+
+
+if __name__ == "__main__":
+    import sys
+
+    json_path = sys.argv[1] if len(sys.argv) > 1 else "dist/resume.json"
+    print(get_resume_slug(json_path))

@@ -6,7 +6,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
 from docx import Document
-from src.common import ENV_KEYS, config_output_path
+from src.common import ENV_KEYS, config_output_path, get_resume_slug
 from src.docx import build_docx
 from src.md.render_md import render_markdown
 from tests.conftest import DEFAULT_CONFIG, DUMMY_NAME, SAMPLE_YAML
@@ -299,3 +299,27 @@ def test_cli_no_args_md():
     )
     assert result.returncode == 1
     assert "Usage:" in result.stdout
+
+
+def test_get_resume_slug(tmp_path):
+    import json
+
+    assert get_resume_slug("non_existent_file.json") == "resume"
+
+    json_file = tmp_path / "resume.json"
+    json_file.write_text(json.dumps({"basics": {"name": "Jane Doe & Co."}}))
+    assert get_resume_slug(str(json_file)) == "jane_doe_co"
+
+    bad_json = tmp_path / "bad.json"
+    bad_json.write_text("invalid json")
+    assert get_resume_slug(str(bad_json)) == "resume"
+
+    # Test CLI invocation
+    result = subprocess.run(
+        [sys.executable, "-m", "src.common", str(json_file)],
+        capture_output=True,
+        text=True,
+        cwd=SCRIPT_DIR,
+    )
+    assert result.returncode == 0
+    assert result.stdout.strip() == "jane_doe_co"
