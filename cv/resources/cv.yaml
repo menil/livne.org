@@ -101,6 +101,12 @@ skills:
     keywords:
       - AWS (EC2, S3, Route 53, Lambda, IAM)
       - Cloudflare (R2, Cloudflare Workers, WAF)
+  - name: Data Engineering & Streaming
+    keywords:
+      - AWS Kinesis
+      - Apache Spark
+      - Databricks
+      - Prefect
   - name: Databases & Data Stores
     keywords:
       - Elasticsearch/OpenSearch
