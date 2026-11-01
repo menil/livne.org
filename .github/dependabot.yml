@@ -9,11 +9,20 @@ updates:
         patterns:
           - "*"
 
-  - package-ecosystem: "nix"
+  - package-ecosystem: "npm"
     directory: "/cv"
     schedule:
       interval: "monthly"
     groups:
-      nix:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/cv"
+    schedule:
+      interval: "monthly"
+    groups:
+      pip-dependencies:
         patterns:
           - "*"
