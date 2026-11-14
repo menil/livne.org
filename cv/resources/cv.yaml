@@ -22,8 +22,8 @@ basics:
 work:
 - &whitepages
   name: Whitepages
-  description: A high-volume data platform serving identity verification, people search,
-    and real estate products at scale.
+  description: A high-volume data platform serving 30M+ monthly users across 250M+
+    US person profiles, 1B+ indexed search pages, and nationwide real estate records.
   position: Principal Software Engineer, Data & Web
   startDate: '2020'
   endDate: '2026'
@@ -56,7 +56,7 @@ work:
   - Rebuilt the core Whitepages data asset from scratch following a corporate spin-off,
     driving the implementation of a high-volume data ingestion pipeline using Scala,
     Apache Spark, Databricks, Elasticsearch and Prefect, resolving hundreds of millions
-    of records to power the central search product
+    of people, phone, and address records to power the central search product
   - Drove the organization-wide search result optimization initiative by building
     an internal evaluation tool and mobilizing cross-functional teams across departments
     to benchmark results against golden datasets
@@ -83,11 +83,11 @@ work:
     that grew to support hundreds of thousands of daily active users and culminated
     in a successful exit'
   - Architected and deployed a high-throughput Node.js API layer alongside complex
-    data aggregation pipelines that synthesized 1B+ contact records from various sources
-    into a unified, clean data model
-  - Engineered the native Android contacts management app, growing it to 10M+ downloads,
-    applying deep systems knowledge to optimize performance, memory usage, and battery
-    consumption
+    data aggregation pipelines that synthesized 1B+ contact records worldwide from
+    various sources into a unified, clean data model
+  - 'Engineered the native Android contacts management app, growing it to 10M+ downloads
+    and the #1 contacts app on Android, applying deep systems knowledge to optimize
+    performance, memory usage, and battery consumption'
 - name: ViGSM
   position: Software Developer, R&D Team Leader
   startDate: '2007'
@@ -105,6 +105,14 @@ work:
   startDate: '2000'
   endDate: '2004'
 skills:
+- name: Architecture & Technical Leadership
+  keywords:
+  - System Design
+  - Data Modeling
+  - Technical SEO & Core Web Vitals
+  - Cost Optimization
+  - Cross-Functional Mentorship
+  - AI-Assisted Workflows
 - name: Languages & Frameworks
   keywords:
   - Java
@@ -159,3 +167,6 @@ education:
 - studyType: B.Sc.
   area: Computer Science
   institution: Tel Aviv University
+meta:
+  themeOptions:
+    fitPages: auto
