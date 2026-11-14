@@ -16,11 +16,7 @@
 
   enterShell = ''
     git config core.hooksPath .githooks 2>/dev/null || true
-    if [ ! -d .venv ]; then
-      python -m venv .venv
-      .venv/bin/pip install -e . -q
-    fi
-    source .venv/bin/activate
+    export PYTHONPATH="''${PYTHONPATH:+$PYTHONPATH:}."
     if [ ! -d node_modules ]; then
       bun install
       bun x puppeteer browsers install chrome
