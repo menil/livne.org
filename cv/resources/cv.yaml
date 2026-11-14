@@ -1,129 +1,153 @@
 basics:
-  name: "{{ name }}"
+  name: '{{ name }}'
   label: Principal Software Engineer
-  email: "{{ email }}"
-  phone: "{{ phone }}"
-  summary: >
-    Principal Software Engineer and Technical Architect specializing in highly scalable backend systems,
-    complex data pipelines, and infrastructure optimization. Proven track record of driving business value
-    through cross-functional collaboration, partnering directly with business departments to engineer solutions
-    that optimize workflows, scale revenue, and generate massive cost savings. Led the foundational
+  email: '{{ email }}'
+  phone: '{{ phone }}'
+  summary: Principal Software Engineer and Technical Architect specializing in highly
+    scalable backend systems, complex data pipelines, and infrastructure optimization.
+    Proven track record of driving business value through cross-functional collaboration,
+    partnering directly with business departments to engineer solutions that optimize
+    workflows, scale revenue, and generate massive cost savings. Led the foundational
     architecture from an early-stage startup to a successful exit.
   location:
     city: Seattle
     region: WA
     countryCode: US
   profiles:
-    - network: LinkedIn
-      url: "{{ linkedin }}"
-    - network: GitHub
-      url: "{{ github }}"
-
+  - network: LinkedIn
+    url: '{{ linkedin }}'
+  - network: GitHub
+    url: '{{ github }}'
 work:
-  - &whitepages
-    name: Whitepages
-    description: A high-volume data platform serving identity verification, people search, and real estate products at scale.
-    position: Principal Software Engineer, Data & Web
-    startDate: "2020"
-    endDate: "2026"
-    highlights:
-      - Spearheaded generative AI integration into core engineering workflows by driving the adoption and establishing organizational standards for AI coding using Claude Code, accelerating overall developer velocity
-      - Led the ground-up architecture and launch of a new consumer PropTech platform, engineering a highly scalable Typescript backend deployed on Cloudflare workers, integrating predictive machine learning models built in Python to generate automated, high-accuracy property valuations and rental income estimates at scale
-      - Led the implementation of Landon, the Whitepages AI real estate assistant using AWS Bedrock, OpenSearch-backed RAG architecture and LLM integration
-      - Conceptualized and drove the implementation of a centralized internal platform that accelerated the marketing department's experimentation velocity by 3x, working with VP-level stakeholders to directly unlock new company revenue streams, earning the CEO spot bonus for outstanding business impact
-      - Partnered with the marketing department to drive conversion rate optimization (CRO) across user-facing properties, championing strict architectural standards for Core Web Vitals and technical SEO that directly improved organic reach and user acquisition
-      - Fostered a culture of engineering excellence by mentoring cross-functional teams, leading technical training sessions, and establishing best practices for system architecture
-  - <<: *whitepages
-    position: Senior Software Engineer, Data
-    startDate: "2019"
-    endDate: "2020"
-    highlights:
-      - Rebuilt the core Whitepages data asset from scratch following a corporate spin-off, driving the implementation of a highly scalable data ingestion pipeline using Scala, Apache Spark, Databricks, Elasticsearch and Prefect to power the company's central search product
-      - Spearheaded the search result optimization initiative across the organization
-      - Engineered six-figure cost savings in the backend systems by optimizing Elasticsearch infrastructure, allowing the company to use in-house solutions and bypass an expensive managed-hosting migration
-
-  - &fullcontact
-    name: Contacts+ (acquired by FullContact)
-    description: An industry-leading identity resolution platform and SaaS provider for professional contact management.
-    position: Senior Backend Architect, FullContact
-    startDate: "2018"
-    endDate: "2019"
-    highlights:
-      - Directed the continued leadership of the Contacts+ backend and data asset development following the acquisition of Contacts+
-  - <<: *fullcontact
-    position: Senior Software Architect, Contacts+
-    startDate: "2012"
-    endDate: "2018"
-    highlights:
-      - "Employee #1 at an early-stage startup, driving the ground-up architecture of a highly scalable backend and proprietary data asset leveraging MongoDB and Redis, that grew to support hundreds of thousands of daily active users and culminated in a successful exit"
-      - Architected and deployed a high-throughput Node.js API layer, alongside complex data aggregation pipelines designed to synthesize millions of records from various sources into a unified, clean data model
-      - Engineered the native contacts management client app for Android, applying deep systems knowledge to optimize performance, memory usage and battery consumption across Dalvik and ART runtimes
-
-  - name: ViGSM
-    position: Software Developer, R&D Team Leader
-    startDate: "2007"
-    endDate: "2011"
-  - name: Atelis PLC
-    position: Software Developer
-    startDate: "2006"
-    endDate: "2007"
-  - name: Winbond
-    position: Software Developer
-    startDate: "2005"
-    endDate: "2006"
-  - name: KDE (Open Source Project)
-    position: Developer
-    startDate: "2000"
-    endDate: "2004"
-
+- &whitepages
+  name: Whitepages
+  description: A high-volume data platform serving identity verification, people search,
+    and real estate products at scale.
+  position: Principal Software Engineer, Data & Web
+  startDate: '2020'
+  endDate: '2026'
+  highlights:
+  - Spearheaded generative AI integration into core engineering workflows by driving
+    the adoption and establishing organizational standards for AI coding using Claude
+    Code, accelerating overall developer velocity
+  - Led the ground-up architecture and launch of a new consumer PropTech platform,
+    engineering a highly scalable Typescript backend deployed on Cloudflare workers,
+    integrating predictive machine learning models built in Python to generate automated,
+    high-accuracy property valuations and rental income estimates at scale
+  - Led the implementation of Landon, the Whitepages AI real estate assistant using
+    AWS Bedrock, OpenSearch-backed RAG architecture and LLM integration
+  - Conceptualized and drove the implementation of a centralized internal platform
+    that accelerated the marketing department's experimentation velocity by 3x, working
+    with VP-level stakeholders to directly unlock new company revenue streams, earning
+    the CEO spot bonus for outstanding business impact
+  - Partnered with the marketing department to drive conversion rate optimization
+    (CRO) across user-facing properties, championing strict architectural standards
+    for Core Web Vitals and technical SEO that directly improved organic reach and
+    user acquisition
+  - Fostered a culture of engineering excellence by mentoring cross-functional teams,
+    leading technical training sessions, and establishing best practices for system
+    architecture
+- <<: *whitepages
+  position: Senior Software Engineer, Data
+  startDate: '2019'
+  endDate: '2020'
+  highlights:
+  - Rebuilt the core Whitepages data asset from scratch following a corporate spin-off,
+    driving the implementation of a highly scalable data ingestion pipeline using
+    Scala, Apache Spark, Databricks, Elasticsearch and Prefect to power the company's
+    central search product
+  - Spearheaded the search result optimization initiative across the organization
+  - Engineered six-figure cost savings in the backend systems by optimizing Elasticsearch
+    infrastructure, allowing the company to use in-house solutions and bypass an expensive
+    managed-hosting migration
+- &fullcontact
+  name: Contacts+ (acquired by FullContact)
+  description: An industry-leading identity resolution platform and SaaS provider
+    for professional contact management.
+  position: Senior Backend Architect, FullContact
+  startDate: '2018'
+  endDate: '2019'
+  highlights:
+  - Directed the continued leadership of the Contacts+ backend and data asset development
+    following the acquisition of Contacts+
+- <<: *fullcontact
+  position: Senior Software Architect, Contacts+
+  startDate: '2012'
+  endDate: '2018'
+  highlights:
+  - 'Employee #1 at an early-stage startup, driving the ground-up architecture of
+    a highly scalable backend and proprietary data asset leveraging MongoDB and Redis,
+    that grew to support hundreds of thousands of daily active users and culminated
+    in a successful exit'
+  - Architected and deployed a high-throughput Node.js API layer, alongside complex
+    data aggregation pipelines designed to synthesize millions of records from various
+    sources into a unified, clean data model
+  - Engineered the native contacts management client app for Android, applying deep
+    systems knowledge to optimize performance, memory usage and battery consumption
+    across Dalvik and ART runtimes
+- name: ViGSM
+  position: Software Developer, R&D Team Leader
+  startDate: '2007'
+  endDate: '2011'
+- name: Atelis PLC
+  position: Software Developer
+  startDate: '2006'
+  endDate: '2007'
+- name: Winbond
+  position: Software Developer
+  startDate: '2005'
+  endDate: '2006'
+- name: KDE (Open Source Project)
+  position: Developer
+  startDate: '2000'
+  endDate: '2004'
 skills:
-  - name: Languages & Frameworks
-    keywords:
-      - Java
-      - Scala
-      - TypeScript
-      - JavaScript
-      - Python
-      - C
-      - C++
-      - Perl
-      - Shell Scripting
-  - name: AI & Machine Learning
-    keywords:
-      - LLM Integration
-      - RAG
-      - AWS Bedrock
-      - Claude Code
-      - OpenRouter
-      - OpenCode
-      - Predictive ML Models
-  - name: Cloud & Infrastructure
-    keywords:
-      - AWS (EC2, S3, Route 53, Lambda, IAM)
-      - Cloudflare (R2, Cloudflare Workers, WAF)
-  - name: Data Engineering & Streaming
-    keywords:
-      - AWS Kinesis
-      - Apache Spark
-      - Databricks
-      - Prefect
-  - name: Databases & Data Stores
-    keywords:
-      - Elasticsearch/OpenSearch
-      - MongoDB
-      - DynamoDB
-      - Redis/Valkey
-      - PostgreSQL
-      - MySQL
-  - name: DevOps & Orchestration
-    keywords:
-      - Kubernetes
-      - Docker
-      - Terraform
-      - Helm
-      - Jenkins
-
+- name: Languages & Frameworks
+  keywords:
+  - Java
+  - Scala
+  - TypeScript
+  - JavaScript
+  - Python
+  - C
+  - C++
+  - Perl
+  - Shell Scripting
+- name: AI & Machine Learning
+  keywords:
+  - LLM Integration
+  - RAG
+  - AWS Bedrock
+  - Claude Code
+  - OpenRouter
+  - OpenCode
+  - Predictive ML Models
+- name: Cloud & Infrastructure
+  keywords:
+  - AWS (EC2, S3, Route 53, Lambda, IAM)
+  - Cloudflare (R2, Cloudflare Workers, WAF)
+- name: Data Engineering & Streaming
+  keywords:
+  - AWS Kinesis
+  - Apache Spark
+  - Databricks
+  - Prefect
+- name: Databases & Data Stores
+  keywords:
+  - Elasticsearch/OpenSearch
+  - MongoDB
+  - DynamoDB
+  - Redis/Valkey
+  - PostgreSQL
+  - MySQL
+- name: DevOps & Orchestration
+  keywords:
+  - Kubernetes
+  - Docker
+  - Terraform
+  - Helm
+  - Jenkins
 education:
-  - studyType: B.Sc.
-    area: Computer Science
-    institution: Tel Aviv University
+- studyType: B.Sc.
+  area: Computer Science
+  institution: Tel Aviv University

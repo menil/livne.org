@@ -7,6 +7,8 @@
   - `src/md/render_md.py` — Script to generate a styled Markdown resume from JSON Resume / YAML database.
   - `src/export_json.py` — Script to resolve PII and export JSON Resume databases.
   - `src/export_yaml.py` — Script to resolve PII and export YAML resume databases.
+  - `src/format_resume.py` — Script to format and check canonical resume YAML formatting.
+  - `src/validate_resume.py` — Script to validate resume schema and canonical formatting.
   - `resources/cv.yaml` — Resume database in YAML.
   - `devenv.{nix,yaml,lock}` — Nix-based dev environment (system libs, Bun, + Python deps).
   - `.envrc` — direnv auto-activation.
