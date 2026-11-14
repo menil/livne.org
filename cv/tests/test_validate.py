@@ -1,5 +1,16 @@
-"""Tests for JSON Resume validation against the official schema."""
+"""Tests for JSON Resume validation against the official schema and canonical formatting."""
 
+import pytest
+
+from src.format_resume import (
+    RESUME_PATH,
+    render_canonical_yaml,
+    resume_yaml_is_canonical,
+)
+from src.format_resume import (
+    main as format_main,
+)
+from src.validate_resume import main as validate_main
 from src.validate_resume import validate_resume
 
 VALID_YAML = """\
@@ -114,3 +125,59 @@ def test_empty_source_rejected(tmp_path):
 def test_non_mapping_source_rejected(tmp_path):
     path = _write(tmp_path, "- a\n- b\n")
     assert "resume must be a YAML mapping" in validate_resume(path)[0]
+
+
+def test_committed_resume_yaml_is_canonical():
+    assert resume_yaml_is_canonical(RESUME_PATH), (
+        "resources/cv.yaml is not in canonical format; "
+        "run `just format-resume` and commit the result."
+    )
+
+
+def test_canonical_preserves_anchors_and_placeholders(tmp_path):
+    content = (
+        "basics:\n"
+        "  name: '{{ name }}'\n"
+        "work:\n"
+        "- &co\n"
+        "  name: Acme\n"
+        "  position: Senior Dev\n"
+        "- <<: *co\n"
+        "  position: Junior Dev\n"
+    )
+    path = _write(tmp_path, content)
+    assert resume_yaml_is_canonical(path)
+    rendered = render_canonical_yaml(content)
+    assert "&co" in rendered
+    assert "<<: *co" in rendered
+    assert "{{ name }}" in rendered
+
+
+def test_format_check_and_rewrite(tmp_path):
+    drifted = 'basics:\n  name: "Jane Doe"\nwork:\n  - name: "Acme"\n    position: "Dev"\n\n'
+    path = _write(tmp_path, drifted)
+    assert not resume_yaml_is_canonical(path)
+    assert format_main([path, "--check"]) == 1
+    assert validate_main([path]) == 0
+    assert validate_main([path, "--check-canonical"]) == 2
+
+    # Rewrite in place
+    assert format_main([path]) == 0
+    assert resume_yaml_is_canonical(path)
+    assert format_main([path, "--check"]) == 0
+    assert format_main([path]) == 0
+    assert validate_main([path, "--check-canonical"]) == 0
+
+
+def test_validate_main_fails_on_schema_violation(tmp_path):
+    path = _write(tmp_path, "basics:\n  name: X\n  email: 'not-an-email'\n")
+    assert validate_main([path]) == 1
+    assert validate_main([path, "--check-canonical"]) == 1
+
+
+def test_render_canonical_yaml_empty_and_undefined_alias():
+    import yaml
+
+    assert render_canonical_yaml("") == ""
+    with pytest.raises(yaml.composer.ComposerError):
+        render_canonical_yaml("work:\n- *missing\n")

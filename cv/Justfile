@@ -1,19 +1,27 @@
 # ─── Lint ───────────────────────────────────────────────────
 lint:
     ruff check .
-    shellcheck ../.githooks/commit-msg
+    shellcheck ../.githooks/commit-msg ../.githooks/pre-commit
     bun run lint
 
 # ─── Format ─────────────────────────────────────────────────
 format:
     ruff format .
-    shfmt -w ../.githooks/commit-msg .envrc
+    shfmt -w ../.githooks/commit-msg ../.githooks/pre-commit .envrc
+    just format-resume
     bun run format
+
+format-resume:
+    python -m src.format_resume resources/cv.yaml
 
 check-format:
     ruff format --check .
-    shfmt -d ../.githooks/commit-msg .envrc
+    shfmt -d ../.githooks/commit-msg ../.githooks/pre-commit .envrc
+    just format-check-resume
     bun run check-format
+
+format-check-resume:
+    python -m src.format_resume resources/cv.yaml --check
 
 # ─── Test (unit + integration) ──────────────────────────────
 test:
@@ -21,7 +29,7 @@ test:
 
 # ─── Resume schema validation ────────────────────────────────
 validate-resume:
-    python -m src.validate_resume resources/cv.yaml
+    python -m src.validate_resume --check-canonical resources/cv.yaml
 
 # ─── Export YAML & JSON (PII resolved) ──────────────────────
 export-yaml: validate-resume

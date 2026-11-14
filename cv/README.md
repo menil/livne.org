@@ -92,8 +92,10 @@ All commands run inside `devenv shell`:
 | Command | Action |
 |---|---|
 | `just lint` | Ruff lint + shellcheck + Biome lint |
-| `just format` | Ruff format + shfmt + Biome format |
+| `just format` | Ruff format + shfmt + resume YAML format + Biome format |
+| `just format-resume` | Normalize `resources/cv.yaml` to canonical format |
 | `just check-format` | Check formatting without changes |
+| `just format-check-resume` | Check `resources/cv.yaml` formatting without changes |
 | `just typecheck` | mypy strict mode on `src/` |
 | `just test` | pytest + coverage (threshold: 90%) |
 | `just build` | Generate all JSON Resume artifacts under `dist/` |
@@ -112,8 +114,9 @@ cv/
 │   │   └── template.md      # Jinja2 Markdown template
 │   ├── export_json.py   # JSON Resume exporter
 │   ├── export_yaml.py   # PII-resolved YAML exporter
+│   ├── format_resume.py # Canonical YAML formatter
 │   ├── resume_model.py  # Resume data loading & processing
-│   └── validate_resume.py # Schema validator
+│   └── validate_resume.py # Schema & canonical format validator
 ├── resources/
 │   └── cv.yaml          # Resume structured database source
 ├── tests/

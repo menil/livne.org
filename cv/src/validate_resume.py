@@ -20,6 +20,7 @@ https://github.com/jsonresume/resume-schema (MIT license).
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -29,6 +30,7 @@ import jsonschema
 import yaml
 
 from src.common import apply_config
+from src.format_resume import resume_yaml_is_canonical
 
 _SCHEMA_PATH = Path(__file__).resolve().parent.parent / "resources" / "resume.schema.json"
 
@@ -72,14 +74,40 @@ def validate_resume(yaml_file: str) -> list[str]:
     return [f"{'.'.join(map(str, error.absolute_path))}: {error.message}" for error in errors]
 
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python -m src.validate_resume <input.yaml>")
-        sys.exit(1)
-    violations = validate_resume(sys.argv[1])
+def main(argv: list[str] | None = None) -> int:
+    """CLI entry point for validating and checking the resume format."""
+    parser = argparse.ArgumentParser(description="Validate a resume YAML file.")
+    parser.add_argument(
+        "path",
+        type=Path,
+        help="Path to the resume YAML file.",
+    )
+    parser.add_argument(
+        "--check-canonical",
+        action="store_true",
+        help=("Verify the file is canonically formatted. Exits with 2 if valid but not canonical."),
+    )
+    args = parser.parse_args(argv)
+
+    violations = validate_resume(str(args.path))
     if violations:
         print("Validation failed:")
         for violation in violations:
             print(f"  - {violation}")
-        sys.exit(1)
-    print("Resume source is valid JSON Resume.")
+        return 1
+
+    if args.check_canonical:
+        if not resume_yaml_is_canonical(args.path):
+            print(
+                f"Resume {args.path} is valid but not canonically formatted.",
+                file=sys.stderr,
+            )
+            return 2
+        print("Resume source is valid and canonically formatted.")
+    else:
+        print("Resume source is valid JSON Resume.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
