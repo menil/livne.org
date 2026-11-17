@@ -29,7 +29,7 @@ work:
   highlights:
   - Spearheaded generative AI integration into core engineering workflows by driving
     the adoption and establishing organizational standards for AI coding using Claude
-    Code, accelerating overall developer velocity
+    Code, accelerating developer velocity
   - Led the ground-up architecture and launch of a new consumer PropTech platform,
     engineering a highly scalable TypeScript backend deployed on Cloudflare Workers,
     integrating Python predictive machine learning models to generate automated property
@@ -56,7 +56,9 @@ work:
     driving the implementation of a high-volume data ingestion pipeline using Scala,
     Apache Spark, Databricks, Elasticsearch and Prefect, resolving hundreds of millions
     of records to power the central search product
-  - Spearheaded the search result optimization initiative across the organization
+  - Drove the organization-wide search result optimization initiative by building
+    an internal evaluation tool and mobilizing cross-functional teams across departments
+    to benchmark results against golden datasets
   - Engineered six-figure cost savings in the backend systems by optimizing Elasticsearch
     infrastructure, allowing the company to use in-house solutions and bypass an expensive
     managed-hosting migration
