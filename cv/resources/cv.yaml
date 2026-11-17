@@ -3,12 +3,13 @@ basics:
   label: Principal Software Engineer
   email: '{{ email }}'
   phone: '{{ phone }}'
-  summary: Principal Software Engineer and Technical Architect specializing in highly
-    scalable backend systems, complex data pipelines, and infrastructure optimization.
-    Proven track record of driving business value through cross-functional collaboration,
-    partnering directly with business departments to engineer solutions that optimize
-    workflows, scale revenue, and generate massive cost savings. Led the foundational
-    architecture from an early-stage startup to a successful exit.
+  summary: Principal Software Engineer and Technical Architect with a track record
+    of setting technical direction and raising engineering standards across teams.
+    Specializes in highly scalable backend systems, complex data pipelines, and infrastructure
+    optimization, driving business value through cross-functional collaboration by
+    partnering directly with business stakeholders to optimize workflows, scale revenue,
+    and generate significant cost savings. Led the foundational architecture from
+    an early-stage startup to a successful exit.
   location:
     city: Seattle
     region: WA
@@ -27,9 +28,9 @@ work:
   startDate: '2020'
   endDate: '2026'
   highlights:
-  - Spearheaded generative AI integration into core engineering workflows by driving
-    the adoption and establishing organizational standards for AI coding using Claude
-    Code, accelerating developer velocity
+  - Set technical direction across the organization by driving generative AI adoption
+    and establishing standards for coding, testing, and incident response, boosting
+    developer velocity and product quality
   - Led the ground-up architecture and launch of a new consumer PropTech platform,
     engineering a highly scalable TypeScript backend deployed on Cloudflare Workers,
     integrating Python predictive machine learning models to generate automated property
